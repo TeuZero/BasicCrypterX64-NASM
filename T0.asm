@@ -295,9 +295,9 @@ WinMain:
 		
 	
 
-	;********************************
-	;* ABAIXO SÃO FUNÇÕES PARA USO *
-	;********************************
+    ;********************************
+    ;* ABAIXO SÃO FUNÇÕES PARA USO *
+    ;********************************
 	
     ; Percorra a tabela de endereços de exportação para encontrar o nome GetProcAddress
     FinFunctionGetProcAddress:
