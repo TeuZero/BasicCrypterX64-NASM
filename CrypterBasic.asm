@@ -133,6 +133,7 @@ section .deccode
 	call r12
 	add rsp, 0x30
 	mov rbx,rax
+ret
 			
  
 section .text
