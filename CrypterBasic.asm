@@ -196,11 +196,10 @@ WinMain:
 			cmp rcx,rdx
 			jne WriteSecion        
 			call decCode
-	ret
-	
-    ;***************
-    ;*     AND     *
-    ;***************
+ret
+;***************
+;*     AND     *
+;***************
 		
 	
 
