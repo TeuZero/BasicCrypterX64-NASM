@@ -145,8 +145,26 @@ section .deccode
 		inc RCX
 		cmp rcx, 0xC3500
 		jne DecArq
+		
 	
-	call Locate_kernel32
+	;Lookup memset
+	mov rax, "memset"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, r15
+	sub rsp, 0x30
+	call r14
+	mov r12,rax
+	add rsp, 0x30
+	
+	;call memset
+	lea rax, [rbp+0x220]
+	mov r8d, 0x4d0
+	mov edx, 0x00
+	mov rcx, rax
+	call r12
+	sub rsp, 0x30
+	
 	
 ret
 	
