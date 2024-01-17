@@ -640,17 +640,17 @@ LoadLibraryA:
 ret
 
 LoadMsvcrt:
-		; Load msvcrt.dll
-		mov rax, "ll"
-		push rax
-		mov rax, "msvcrt.d"
-		push rax
-		mov rcx, rsp
-		sub rsp, 0x30
-		call rsi
-		mov r15,rax
-		add rsp, 0x30
-		add rsp, 0x10
+	; Load msvcrt.dll
+	mov rax, "ll"
+	push rax
+	mov rax, "msvcrt.d"
+	push rax
+	mov rcx, rsp
+	sub rsp, 0x30
+	call rsi
+	mov r15,rax
+	add rsp, 0x30
+	add rsp, 0x10
 ret		 
 
 GetProcAddres:
@@ -711,67 +711,67 @@ ret
 
 ;locate_kernel32
 Locate_kernel32: 
-		xor rcx, rcx; # Zera RCX
-		mov rax, gs:[rcx + 0x60]; # 0x060 ProcessEnvironmentBlock to RAX.
-		mov rax, [rax + 0x18]; # 0x18  ProcessEnvironmentBlock.Ldr Offset
-		mov rsi, [rax + 0x20]; # 0x20 Offset = ProcessEnvironmentBlock.Ldr.InMemoryOrderModuleList
-		lodsq; # Load qword at address (R)SI into RAX (ProcessEnvironmentBlock.Ldr.InMemoryOrderModuleList)
-		xchg rax, rsi; # troca RAX,RSI
-		lodsq; # Load qword at address (R)SI into RAX
-		mov rbx, [rax + 0x20]; # RBX = Kernel32 base address
-		mov r8, rbx; # Copia o endereco base do Kernel32 para o registrador R8
+	xor rcx, rcx; # Zera RCX
+	mov rax, gs:[rcx + 0x60]; # 0x060 ProcessEnvironmentBlock to RAX.
+	mov rax, [rax + 0x18]; # 0x18  ProcessEnvironmentBlock.Ldr Offset
+	mov rsi, [rax + 0x20]; # 0x20 Offset = ProcessEnvironmentBlock.Ldr.InMemoryOrderModuleList
+	lodsq; # Load qword at address (R)SI into RAX (ProcessEnvironmentBlock.Ldr.InMemoryOrderModuleList)
+	xchg rax, rsi; # troca RAX,RSI
+	lodsq; # Load qword at address (R)SI into RAX
+	mov rbx, [rax + 0x20]; # RBX = Kernel32 base address
+	mov r8, rbx; # Copia o endereco base do Kernel32 para o registrador R8
 ret
 
 IAT:
 ; Código para chegar na tabela de endereco de exportacao
-		mov ebx, [rbx+0x3C];# obtem o endereco da assinatura do  PE do Kernel32 e coloca em  EBX
-		add rbx, r8;# Add defrerenced signature offset to kernel32 base. Store in RBX.
-		mov r12, 0x88FFFFF;      
-		shr r12, 0x14; 
-		mov edx, [rbx+r12];   # Offset from PE32 Signature to Export Address Table (NULL BYTE)
-		add rdx, r8;# RDX = kernel32.dll + RVA ExportTable = ExportTable Address
-		mov r10d, [rdx+0x14]; # numero de funcoes
-		xor r11, r11;# Zera R11 para ser usado 
-		mov r11d, [rdx+0x20]; # AddressOfNames RVA
-		add r11, r8;# AddressOfNames VMA
+	mov ebx, [rbx+0x3C];# obtem o endereco da assinatura do  PE do Kernel32 e coloca em  EBX
+	add rbx, r8;# Add defrerenced signature offset to kernel32 base. Store in RBX.
+	mov r12, 0x88FFFFF;      
+	shr r12, 0x14; 
+	mov edx, [rbx+r12];   # Offset from PE32 Signature to Export Address Table (NULL BYTE)
+	add rdx, r8;# RDX = kernel32.dll + RVA ExportTable = ExportTable Address
+	mov r10d, [rdx+0x14]; # numero de funcoes
+	xor r11, r11;# Zera R11 para ser usado 
+	mov r11d, [rdx+0x20]; # AddressOfNames RVA
+	add r11, r8;# AddressOfNames VMA
 ret
 
 ;locate_ntdll
 Locate_ntdll:        
-		xor rcx, rcx; # Zera RCX
-		mov rax, gs:[rcx + 0x60]; # 0x060 ProcessEnvironmentBlock to RAX.
-		mov rax, [rax + 0x18]; # 0x18  ProcessEnvironmentBlock.Ldr Offset
-		mov rsi, [rax + 0x30]; # 0x30 Offset = ProcessEnvironmentBlock.Ldr.InInitializationOrderModuleList
-		mov rbx, [rsi +0x10]; # dll base ntdll
-		mov r8, rbx; # Copia o endereco base da ntdll para o registrador R8
+	xor rcx, rcx; # Zera RCX
+	mov rax, gs:[rcx + 0x60]; # 0x060 ProcessEnvironmentBlock to RAX.
+	mov rax, [rax + 0x18]; # 0x18  ProcessEnvironmentBlock.Ldr Offset
+	mov rsi, [rax + 0x30]; # 0x30 Offset = ProcessEnvironmentBlock.Ldr.InInitializationOrderModuleList
+	mov rbx, [rsi +0x10]; # dll base ntdll
+	mov r8, rbx; # Copia o endereco base da ntdll para o registrador R8
 ret
 
 LoadLibrary:        
-		mov rcx, 0x41797261;  
-		push rcx;  
-		mov rcx, 0x7262694c64616f4c;  
-		push rcx;  
-		mov rdx, rsp; # joga o ponteiro de LoadLibraryA para RDX
-		mov rcx, r8; # Copia endereco base do Kernel32 para RCX
-		sub rsp, 0x30; # Make some room on the stack
-		call r14; # Call GetProcessAddress
-		add rsp, 0x30; # Remove espaço alocado na pilha
-		add rsp, 0x10; # Remove a string LoadLibrary alocada 
-		mov rsi, rax; # Guarda o endereço de loadlibrary em RSI
+	mov rcx, 0x41797261;  
+	push rcx;  
+	mov rcx, 0x7262694c64616f4c;  
+	push rcx;  
+	mov rdx, rsp; # joga o ponteiro de LoadLibraryA para RDX
+	mov rcx, r8; # Copia endereco base do Kernel32 para RCX
+	sub rsp, 0x30; # Make some room on the stack
+	call r14; # Call GetProcessAddress
+	add rsp, 0x30; # Remove espaço alocado na pilha
+	add rsp, 0x10; # Remove a string LoadLibrary alocada 
+	mov rsi, rax; # Guarda o endereço de loadlibrary em RSI
 ret
 	
 VirtualProect:
 ; pega o endereco VirtualProtect usando GetProcAddress
-		mov rcx, 0x746365746f72
-		push rcx
-		mov rcx, 0x506C617574726956
-		shr rcx, 0x40
-		push rcx
-		mov rdx, rsp; # joga o ponteiro da string VirtualProtect para RDX
-		mov rcx, r8; # Copia o endereço base da Kernel32  para RCX
-		sub rsp, 0x30
-		call r14; # Call GetProcessAddress
-		add rsp, 0x30; # Remove espaço locdo na pilha
-		add rsp, 0x10; # Remove a string alocada de  VirtualProtect 
-		mov rsi, rax; # Guarda o endereço de loadlibrary em RSI
+	mov rcx, 0x746365746f72
+	push rcx
+	mov rcx, 0x506C617574726956
+	shr rcx, 0x40
+	push rcx
+	mov rdx, rsp; # joga o ponteiro da string VirtualProtect para RDX
+	mov rcx, r8; # Copia o endereço base da Kernel32  para RCX
+	sub rsp, 0x30
+	call r14; # Call GetProcessAddress
+	add rsp, 0x30; # Remove espaço locdo na pilha
+	add rsp, 0x10; # Remove a string alocada de  VirtualProtect 
+	mov rsi, rax; # Guarda o endereço de loadlibrary em RSI
 ret
