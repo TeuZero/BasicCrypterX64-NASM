@@ -83,7 +83,7 @@ startup istruc STARTUPINFOA
 	
 section .codered
 	CodeRed:
-	Buffer2 times 800000 db 0
+	Buffer2 times 800000 		db 0
 	
 section .deccode
 	decCode:
