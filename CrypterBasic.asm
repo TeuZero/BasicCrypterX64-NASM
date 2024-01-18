@@ -89,7 +89,7 @@ section .data
     iend
 	
     
-	struc PROCESSINFO
+   struc PROCESSINFO
         .hProcess                                    resd 2
         .hThread                                     resd 2
         .dwProcessId                                 resd 1
