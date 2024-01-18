@@ -9,7 +9,7 @@ Crypter Básico (Não esse crypter não vai encriptar seu programa feito em C ou
 
     Esse é o crypter Básico, ta encriptando arquivo PE e escrevendo na seção .codered, e cria o processo suspenso, usando o programa do "svchost.exe".  
     
-    estou usando códigos prontos, pra não perder tempo digitando de novo, caso queria digitar de novo só usar os registradores fazer algumas mudanças adicionando ou removendo códigos, isso para bypass o Anti-Vírus, mas no final vai comprir a memas função!
+    estou usando códigos prontos, pra não perder tempo digitando de novo, caso queria digitar de novo só usar os registradores fazer algumas mudanças adicionando ou removendo códigos, isso para bypass o Anti-Vírus, mas no final vai comprir a mesma função!
 
 
 
