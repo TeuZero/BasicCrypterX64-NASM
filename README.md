@@ -1,4 +1,4 @@
-# CrypterBasicoInAssemblyX64
+# CrypterBasicInAssemblyX64
 Fazendo em nasm, está em desenvolvimento ainda...
 
  Estou montando aos poucos...::
