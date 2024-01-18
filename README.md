@@ -3,7 +3,7 @@ Fazendo em nasm, está em desenvolvimento ainda...
 
  Estou montando aos poucos...::
 
-[Montar em assembly usando Nasm usando um pouco de  shellcode]
+[Montar em assembly usando Nasm, e usando um pouco de  shellcode]
 
 Crypter Básico (Não esse crypter não vai encriptar seu programa feito em C ou .NET, o seu Trojan comprado por ai, o seu .exe e vai injetar em algum processo):
 
