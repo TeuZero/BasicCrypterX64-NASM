@@ -342,7 +342,7 @@ section .deccode
 	;ZwUnmapViewOfSection
 	mov rax, [lpPreferableBase]
 	cmp rax, [lpPebImageBase]
-	jne lpAllocatedBase
+	jne lpAllocatedBase ; Pula se não for igual address 0x400000
 	call Locate_ntdll
 
 	mov rax, "tion"
