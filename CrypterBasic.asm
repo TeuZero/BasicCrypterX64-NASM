@@ -2,7 +2,7 @@
 global WinMain
 
 section .BSS
-	process db "T0.exe",0,0
+	process db "svchost.exe",0,0
 	
 section .data	
 	
