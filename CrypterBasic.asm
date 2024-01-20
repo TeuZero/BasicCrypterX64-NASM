@@ -165,8 +165,8 @@ section .data
     lpImageBase times 8                              dd 0
     VA times 8                                       dd 0
     lpAllocatedBaset times 8                         dd 0
-	PE times 8                                       dq 0
-	lpPreferableBase dd 0x400000
+    PE times 8                                       dq 0
+    lpPreferableBase dd 0x400000
 	
 section .codered
 	CodeRed:
