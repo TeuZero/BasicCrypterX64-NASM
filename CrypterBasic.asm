@@ -589,13 +589,15 @@ WinMain:
 		dec rdx
 		cmp rcx,rdx
 		jne WriteSecion 
-
-	call decCode
+	
+	Dec:
+		call decCode
 ret
 ;***************
 ;*     AND     *
 ;***************
-		
+	
+	
 PrintMsgConsole:
 	; Lookup printf
 	mov rax, "printf"
@@ -786,7 +788,6 @@ FechaArquivo:
 ;********************************
 ;* ABAIXO BUSCA POR FUNÇÕES     *
 ;********************************
-
 ; Percorra a tabela de endereços de exportação para encontrar o nome GetProcAddress
 FinFunctionGetProcAddress:
 	mov rcx, r10; # Set loop counter
@@ -903,7 +904,6 @@ FunctionNameFound2:
 		mov r14, rax; # GetProcAddress to R14
 ret
 
-
 ;locate_kernel32
 Locate_kernel32: 
 	xor rcx, rcx; # Zera RCX
@@ -971,7 +971,6 @@ VirtualProect:
 	mov rsi, rax; # Guarda o endereço de Virtual protect em RSI
 ret
 
-
 VirtualProectEx:
 ; pega o endereco VirtualProtect usando GetProcAddress
 	sub rsp, 0x30
@@ -990,8 +989,6 @@ VirtualProectEx:
 	mov r12, rax
 	add rsp, 0x30
 ret
-
-
 
 WriteProcess:
 	;Lookup WriteProcessMemory
