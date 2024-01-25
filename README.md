@@ -5,11 +5,11 @@ Fazendo em nasm, está em desenvolvimento ainda...
 
 [Montar em assembly usando Nasm, e usando um pouco de  shellcode]
 
-Crypter Básico (Não esse crypter não vai encriptar seu programa feito em C ou .NET, o seu Trojan comprado por ai, o seu .exe e vai injetar em algum processo):
+Crypter Básico (Sim esse crypter vai encriptar seu programa feito em C. em .NET , VBA,Delphi  não testei , o seu Trojan, o seu .exe e vai injetar em um processo criado do svchost.exe):
 
-    Esse é o crypter Básico, ta encriptando arquivo PE e escrevendo na seção .codered, e cria o processo suspenso, usando o programa "svchost.exe".  
-    
-    estou usando códigos prontos, pra não perder tempo digitando de novo, caso queria digitar de novo só usar os registradores fazer algumas mudanças adicionando ou removendo códigos, isso para bypass o Anti-Vírus, mas no final vai cumprir a mesma função!
+Quase tudo pronto.
+
+estou usando códigos prontos, pra não perder tempo digitando de novo, caso queria digitar de novo só usar os registradores fazer algumas mudanças adicionando ou removendo códigos, isso para bypass o Anti-Vírus, mas no final vai cumprir a mesma função!
 
 
 
@@ -28,10 +28,17 @@ Usando o Buffer:
  7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também. (JÁ TENHO UM SHELLCODE PARA TESTE MAIS NÃO VOU USAR, VOU FAZER PRIMEIRO A ETAPA 8.).
 
 8. Desmapear e mapear a memoria, Decriptar programa alvo nesse processo limpo, fazer alguns calculos, apontar para entry point e resumi(RunPE). (FEITO)
+ Testado em arquivo pequenos.
+
 
 9. O shellcode encriptado, você vai usar para injetar em algum processo, por exemplo o bloco de notas, então você vai ter que escrever o código de injeção no .TEXT do seu programa ou onde você quiser.. 
 
-Este Programa vai criar um processo, no caso "svchost.exe", depois vai "jogar" o programa passado no começo do programa para o processo suspendido e vai resumi, Detalhes tecnicos vai estar no código.
+"Este Programa vai criar um processo, no caso "svchost.exe", depois vai "jogar" o programa passado no começo do programa para o processo suspendido e vai resumi, Detalhes tecnicos vai estar no código."
+
+
+#Exemplo de compilação:
+#nasm -fWin64 CrypterBasicInAssemblyX64.asm
+#golink /entry:Start /conosle CrypterBasicInAssemblyX64.obj
 
 11. Salvar o buffer como arquivo binário, com entrypoint aleterado. (NÃO FEITO)
 
