@@ -33,11 +33,12 @@ Usando o Buffer:
 
 9. O shellcode encriptado, você vai usar para injetar em algum processo, por exemplo o bloco de notas, então você vai ter que escrever o código de injeção no .TEXT do seu programa ou onde você quiser.. 
 
-"Este Programa vai criar um processo, no caso "svchost.exe", depois vai "jogar" o programa passado no começo do programa para o processo suspendido e vai resumi, Detalhes tecnicos vai estar no código."
+10. "Este Programa vai criar um processo, no caso "svchost.exe", depois vai "jogar" o programa passado no começo do programa para o processo suspendido e vai resumi, Detalhes tecnicos vai estar no código."
 
+11. Salvar o buffer como arquivo binário, com entrypoint aleterado. (NÃO FEITO)
 
 # Exemplo de compilação:
 # nasm -fWin64 CrypterBasicInAssemblyX64.asm
 # golink /entry:Start /conosle CrypterBasicInAssemblyX64.obj
 
-11. Salvar o buffer como arquivo binário, com entrypoint aleterado. (NÃO FEITO)
+
