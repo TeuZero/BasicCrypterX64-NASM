@@ -36,9 +36,9 @@ Usando o Buffer:
 "Este Programa vai criar um processo, no caso "svchost.exe", depois vai "jogar" o programa passado no começo do programa para o processo suspendido e vai resumi, Detalhes tecnicos vai estar no código."
 
 
-#Exemplo de compilação:
-#nasm -fWin64 CrypterBasicInAssemblyX64.asm
-#golink /entry:Start /conosle CrypterBasicInAssemblyX64.obj
+# Exemplo de compilação:
+# nasm -fWin64 CrypterBasicInAssemblyX64.asm
+# golink /entry:Start /conosle CrypterBasicInAssemblyX64.obj
 
 11. Salvar o buffer como arquivo binário, com entrypoint aleterado. (NÃO FEITO)
 
