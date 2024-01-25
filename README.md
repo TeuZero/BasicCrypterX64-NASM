@@ -41,13 +41,3 @@ Usando o Buffer:
 # golink /entry:Start /conosle CrypterBasicInAssemblyX64.obj
 
 11. Salvar o buffer como arquivo binário, com entrypoint aleterado. (NÃO FEITO)
-
-
-Vírus Básico:
-1. Copiar o arquivo PE do  programa alvo para um buffer.
-Usando o Buffer:
-2. fazer cálculos para alocar e escrever um seção e o código do vírus que será um shellcode de conexão.
-3. Reestruturar os endereços das seções do programa alvo. 
-4. Salvar os 5 primeiros bytes em um buffer, e No começo do código alterar para pular para seção que você escreveu, que estará a injeção do código, ou a execução do mesmo em uma thread.
-5. Depois da execução do vírus, no fim da seção do código escrever os 5 bytes salvos e pular(JMP) para o inicio do programa Original normalmente.
-6. Salve o buffer como arquivo binário.
