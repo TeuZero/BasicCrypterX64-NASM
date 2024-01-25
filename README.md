@@ -27,13 +27,13 @@ Usando o Buffer:
 
  7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também. (JÁ TENHO UM SHELLCODE PARA TESTE MAIS NÃO VOU USAR, VOU FAZER PRIMEIRO A ETAPA 8.).
 
-8. Desmapear e mapear a memoria, Decriptar programa alvo nesse processo limpo, fazer alguns calculos, apontar para entry point e resumi(RunPE).
+8. Desmapear e mapear a memoria, Decriptar programa alvo nesse processo limpo, fazer alguns calculos, apontar para entry point e resumi(RunPE). (FEITO)
 
 9. O shellcode encriptado, você vai usar para injetar em algum processo, por exemplo o bloco de notas, então você vai ter que escrever o código de injeção no .TEXT do seu programa ou onde você quiser.. 
 
 Este Programa vai criar um processo, no caso "svchost.exe", depois vai "jogar" o programa passado no começo do programa para o processo suspendido e vai resumi, Detalhes tecnicos vai estar no código.
 
-11. Salvar o buffer como arquivo binário, com entrypoint aleterado.
+11. Salvar o buffer como arquivo binário, com entrypoint aleterado. (NÃO FEITO)
 
 
 Vírus Básico:
