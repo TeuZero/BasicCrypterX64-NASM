@@ -1,4 +1,5 @@
 # CrypterBasicInAssemblyX64
+# 0xC0FFE
 Está em desenvolvimento ainda...
 
  Estou montando aos poucos...::
