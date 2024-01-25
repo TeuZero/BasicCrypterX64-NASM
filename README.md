@@ -28,7 +28,7 @@ Usando o Buffer:
 
  7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também. (JÁ TENHO UM SHELLCODE PARA TESTE MAIS NÃO VOU USAR, VOU FAZER PRIMEIRO A ETAPA 8.).
 
-8. Desmapear e mapear a memoria, Decriptar programa alvo nesse processo limpo, fazer alguns calculos, apontar para entry point e resumi(RunPE). (FEITO)
+8. Desmapear e mapear a memoria, Decriptar programa alvo nesse processo, fazer alguns calculos, apontar para entry point e resumi(RunPE). (FEITO)
  Testado em arquivo pequenos.
 
 
