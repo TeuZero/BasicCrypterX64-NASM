@@ -25,7 +25,7 @@ Estou usando códigos prontos, pra não perder tempo digitando de novo, caso que
 
 7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também.
 
-8. Desmapear e mapear a memoria, fazer alguns calculos, Decriptar programa alvo nesse processo, apontar para entry point e resumi(RunPE). (FEITO) Testado em programas pequenos,feitos em C/C++ no mingw, Visual Studio, e assembly.
+8. Desmapear e mapear a memoria, fazer alguns calculos, Decriptar programa alvo nesse processo, apontar para entry point e resumi(RunPE).Testado em programas pequenos,feitos em C/C++ no mingw, Visual Studio, e assembly. (FEITO)
 
 9. O shellcode encriptado, você vai usar para injetar em algum processo, por exemplo o bloco de notas, então você vai ter que escrever o código de injeção no .TEXT do seu programa ou onde você quiser.. 
 
