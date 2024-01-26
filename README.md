@@ -24,9 +24,9 @@ estou usando códigos prontos, pra não perder tempo digitando de novo, caso que
   
 5. Copiar o código encriptado para umas das seção que você crio.(FEITO)
 
-6. Escrever o código para criar processo, você vai criar outro Processo do seu próprio processo suspendido. (FEITO)
+6. Escrever o código para criar processo do svchost. (FEITO)
 
-7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também. (JÁ TENHO UM SHELLCODE PARA TESTE MAIS NÃO VOU USAR, VOU FAZER PRIMEIRO A ETAPA 8.).
+7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também.
 
 8. Desmapear e mapear a memoria, Decriptar programa alvo nesse processo, fazer alguns calculos, apontar para entry point e resumi(RunPE). (FEITO)
  Testado em arquivo pequenos.
