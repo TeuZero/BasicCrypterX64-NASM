@@ -4,7 +4,7 @@
 
 [Montar em assembly usando Nasm, e usando um pouco de  shellcode]
 
-Crypter Básico Sim esse crypter vai encriptar seu programa feito em C/C++, ASM.
+Crypter Básico, Sim esse crypter vai encriptar seu programa feito em C/C++, ASM.
 
  (Em .NET , VBA,Pascal não funciona.)
 
