@@ -2,10 +2,6 @@
 # 0xC0FFE
     https://www.ired.team/offensive-security/code-injection-process-injection/process-hollowing-and-pe-image-relocations
 
-Está em desenvolvimento ainda...
-
- Estou montando aos poucos...::
-
 [Montar em assembly usando Nasm, e usando um pouco de  shellcode]
 
 Crypter Básico (Sim esse crypter vai encriptar seu programa feito em C. em .NET , VBA,Delphi  não testei , o seu programa, o seu .exe vai ser injetado em um processo criado do svchost.exe):
