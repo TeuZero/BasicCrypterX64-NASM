@@ -23,15 +23,17 @@ Estou usando códigos prontos, pra não perder tempo digitando de novo, caso que
 5. Copiar o código encriptado para umas das seção que você crio.(FEITO)
 6. Escrever o código para criar processo do svchost suspendido. (FEITO)
 
-7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também.
+7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também. (FEITO)
 
 8. Desmapear e mapear a memoria, fazer alguns calculos, Decriptar programa alvo nesse processo, apontar para entry point e resumi(RunPE).Testado em programas pequenos,feitos em C/C++ no mingw, Visual Studio, e assembly. (FEITO)
 
-9. O shellcode encriptado, você vai usar para injetar em algum processo, por exemplo o bloco de notas, então você vai ter que escrever o código de injeção no .TEXT do seu programa ou onde você quiser.. 
+9. Salvar o buffer como arquivo binário, com entrypoint aleterado.
 
-10. "Este Programa vai criar um processo, no caso "svchost.exe", depois vai "jogar" o programa passado no começo do programa para o processo suspendido e vai resumi, Detalhes tecnicos vai estar no código."
 
-11. Salvar o buffer como arquivo binário, com entrypoint aleterado.
+O shellcode encriptado, você vai usar para injetar em algum processo, por exemplo o bloco de notas, então você vai ter que escrever o código de injeção no .TEXT do seu programa ou onde você quiser... 
+"Este Programa vai criar um processo, no caso "svchost.exe", depois vai "jogar" o programa passado no começo do programa para o processo suspendido e vai resumi, Detalhes tecnicos vai estar no código."
+
+
 
 # Exemplo de compilação:
 # nasm -fWin64 CrypterBasicInAssemblyX64.asm
