@@ -1,5 +1,6 @@
 # CrypterBasicInAssemblyX64
 # 0xC0FFE
+https://www.ired.team/offensive-security/code-injection-process-injection/process-hollowing-and-pe-image-relocations
 Está em desenvolvimento ainda...
 
  Estou montando aos poucos...::
