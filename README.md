@@ -8,7 +8,7 @@ Está em desenvolvimento ainda...
 
 [Montar em assembly usando Nasm, e usando um pouco de  shellcode]
 
-Crypter Básico (Sim esse crypter vai encriptar seu programa feito em C. em .NET , VBA,Delphi  não testei , o seu programa, o seu .exe e vai injetar em um processo criado do svchost.exe):
+Crypter Básico (Sim esse crypter vai encriptar seu programa feito em C. em .NET , VBA,Delphi  não testei , o seu programa, o seu .exe vai ser injetado em um processo criado do svchost.exe):
 
 Quase tudo pronto.
 
