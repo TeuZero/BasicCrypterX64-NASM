@@ -18,14 +18,14 @@ Estou usando códigos prontos, pra não perder tempo digitando de novo, caso que
 
 2. Escrever duas seções com nome de sua escolha. (FEITO)
 
-3. Criar outro buffer que será armazenado o PE alvo de algum programa de sua escolha(por exemplo o bloco de notas). (FEITO)
+3. Criar outro buffer que será armazenado o PE alvo de algum programa pequeno como write.exe encontrado no diretório: "C:\Windows\write.exe", já foi testado com esse programa, com msgbox, com programas de conexão reversa feito em assembly e em C/C++ . (FEITO)
 
 4. Na seção .TEXT do seu programa escrever o código que vai encriptar o buffer PE do programa alvo que será executado. (FEITO)
 
 5. Copiar o código encriptado para umas das seção que você crio.(FEITO)
 6. Escrever o código para criar processo do svchost suspendido. (FEITO)
 
- 7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também.
+7. Escrever um shellcode de conexão no .TEXT do seu programa, encriptalo copiar para outra seção e escrever o decripter do programa alvo nessa mesma seção e o decripter do shellcode também.
 
 8. Desmapear e mapear a memoria, fazer alguns calculos, Decriptar programa alvo nesse processo, apontar para entry point e resumi(RunPE). (FEITO) Testado em programas pequenos,feitos em C/C++ no mingw, Visual Studio, em outros não testei.
 
