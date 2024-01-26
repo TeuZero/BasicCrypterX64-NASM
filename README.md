@@ -1,6 +1,6 @@
 # Basic Crypto X64
 # 0xC0FFE
-https://www.ired.team/offensive-security/code-injection-process-injection/process-hollowing-and-pe-image-relocations
+    https://www.ired.team/offensive-security/code-injection-process-injection/process-hollowing-and-pe-image-relocations
 
 Está em desenvolvimento ainda...
 
@@ -12,7 +12,7 @@ Crypter Básico (Sim esse crypter vai encriptar seu programa feito em C. em .NET
 
 Quase tudo pronto.
 
-    estou usando códigos prontos, pra não perder tempo digitando de novo, caso queria digitar de novo só usar os registradores fazer algumas mudanças adicionando ou removendo códigos, isso para bypass o Anti-Vírus, mas no final vai cumprir a memas função!
+Estou usando códigos prontos, pra não perder tempo digitando de novo, caso queria digitar de novo só usar os registradores fazer algumas mudanças adicionando ou removendo códigos, isso para bypass o Anti-Vírus, mas no final vai cumprir a memas função!
 
 1. Copiar o arquivo PE do seu programa para um buffer(Variável). (FEITO)
 
