@@ -154,7 +154,6 @@ section .data
     TamArqTarget times 8                             dq 0
     bufferFileName times 32                          db 0
     Buffer times 800000                              dq 0
-    entrypointTarget times 8                         dq 0
     GetSizeTarget times 8                            dq 0
     lpPebImageBase times 8                           dq 0
     allocex times 8                                  dd 0 
