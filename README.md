@@ -36,7 +36,7 @@ O shellcode encriptado, você vai usar para injetar em algum processo, por exemp
 
 
 # Exemplo de compilação:
-# nasm -fWin64 CrypterBasicInAssemblyX64.asm
-# golink /entry:Start /conosle CrypterBasicInAssemblyX64.obj
+# nasm -fWin64 T007.asm
+# golink /entry:Start /conosle T007.obj
 
 
