@@ -1456,21 +1456,3 @@ GetThreadCx:
 	add rsp, 0x30
 	mov r12, rax
 ret
-
-CreateRemoteThread:
-	;Lookup CreateRemoteThread
-	mov rax, "ad"
-	push rax
-	mov rax, "moteThre"
-	push rax
-	mov rax, "CreateRe"
-	push rax
-	lea rdx, [rsp]
-	mov rcx, r8
-	sub rsp, 0x30
-	call r14
-	add rsp, 0x30
-	add rsp, 0x10
-	add rsp, 0x08
-	mov r12,rax
-ret
