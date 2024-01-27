@@ -8,7 +8,7 @@ Crypter Básico, Sim esse crypter vai encriptar seu programa feito em C/C++, ASM
 
  (Em .NET , VBA,Pascal não funciona.)
 
-Quase tudo pronto.
+Tudo pronto.
 
 Estou usando códigos prontos, pra não perder tempo digitando de novo, caso queria digitar de novo só usar os registradores fazer algumas mudanças adicionando ou removendo códigos, isso para bypass o Anti-Vírus, mas no final vai cumprir a memas função!
 
@@ -27,7 +27,7 @@ Estou usando códigos prontos, pra não perder tempo digitando de novo, caso que
 
 8. Desmapear e mapear a memoria, fazer alguns calculos, Decriptar programa alvo nesse processo, apontar para entry point e resumi(RunPE).Testado em programas pequenos,feitos em C/C++ no mingw, Visual Studio, e assembly. (FEITO)
 
-9. Salvar o buffer como arquivo binário, com entrypoint aleterado.
+9. Salvar o buffer como arquivo binário, com entrypoint aleterado. no caso não precisei alterar o EntryPoint, fiz algumas alterações só. (FEITO)
 
 
 O shellcode encriptado, você vai usar para injetar em algum processo, por exemplo o bloco de notas, então você vai ter que escrever o código de injeção no .TEXT do seu programa ou há onde você quiser... 
