@@ -5,12 +5,12 @@
 global WinMain
 
 section .BSS
-	bool dq 1
-	tamArq dq 0
+    bool dq 1
+    tamArq dq 0
 	
 	
 section .data
-	process dq "svchost.exe",0,0
+    process dq "svchost.exe",0,0
 	
     struc CONTEXT
        .P1Home:                                      resq 1
