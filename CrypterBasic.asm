@@ -176,7 +176,7 @@ section .data
     NameArgv0 times 32 db 0
 	tm times 8 dq 0
 
- section .codered 
+section .codered 
  CodeRed times 800000                             db 0:
 
 section .deccode	
