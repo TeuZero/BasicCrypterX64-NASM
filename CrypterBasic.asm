@@ -445,7 +445,6 @@ section .deccode
 								
 	Writable:
 			call Locate_kernel32
-			;Guarda offset PE
 			mov rax,  [PE]
 			mov eax, dword[rax+0x28]
 			mov edx,eax
