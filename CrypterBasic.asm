@@ -126,6 +126,7 @@ section .data
     ptr17f0                                          dd 0x01
     
 section codered
+	;CodeRed times 80000000                             db 0:
 	CodeRed:
 	buffer times 800000 dq 0
 
@@ -272,7 +273,7 @@ WinMain:
 	mov edx, dword [rbx+0x3c]
 	add rbx, rdx
 	add rbx, 0x28
-	mov [rbx], dword 0x0061D000
+	mov [rbx], dword 0x0061D000;0x04C4E000
 		
         ;call fwrite
         xor r8,R8
@@ -392,14 +393,14 @@ section deccode
     ;call VirtualAlloc
     mov r9d, 0x04
     mov r8d, 0x1000
-    mov rdi, 0x80000
+    mov rdi, 800000;80000000 
     mov edx, edi
     mov ecx, 0x00
     call rax
 	mov [AddressAlocadoV], rax
     mov rcx, [AddressAlocadoV]
 	mov rdx, CodeRed
-    mov r9, 0x80000
+    mov r9, 800000;80000000 
 	sub r9, 0x07
     DecArq:
         mov rax, [rdx]
