@@ -6,7 +6,7 @@
 
 Crypter Básico, esse crypter vai encriptar alguns programas feito em C/C++ e ASM pequenos.
 
-E vai decriptar e executa-lo em novo processo no caso "svchost.exe".
+E vai decriptar e executa-lo em um novo processo no caso "svchost.exe".
 
 (Em .NET , VBA,Pascal não funciona.)
 
