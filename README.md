@@ -13,15 +13,13 @@ foi testado com o programa write.exe encontrado no diretório: "C:\Windows\write
 
 1. Copia o arquivo PE alvo para memória.
 2. Vai criptografando e escrevendo o arquivo PE alvo para seção .codered.
-3. Cria o processo svchost.exe da pasta c:\WINDOWS\system32, suspendido.   
-4. Descriptografa o arquivo PE alvo na memoria.
-5. Se necessario desmapear o endereço base do processo, no caso não precisa, ele só aloca um espaço na memoria no endereço imagebase do processo alvo no svchost.exe
-6. faz alguns calculos de relocação de endereço do arquivo PE alvo, e escreve o código começando do endereço  no 0x400000 até o fim do arquivo.
-7. Usa o GetThreadContext e SetThreadContext para setar os endereços.
-8. Resumi a thread. 
-9. Depois ele abre o proprio arquivo T007.exe, e aloca um endereço com o tamanho do PE ALVO e grava seu PE na memoria.
-10. Depois ele copia o código PE alvo encriptado para seção .codered no endereço alocado, faz algumas alterações para pular algumas instruções que já foi executada.
-11. Salvar o arquivo PE na memoria alocada como arquivo binário, usando fwrite.
+3. Salvar o arquivo PE na memoria alocada como arquivo binário, usando fwrite.
+4.  O PE encriptado cria o processo svchost.exe da pasta c:\WINDOWS\system32, suspendido.   
+5. Descriptografa o arquivo PE alvo na memoria.
+6. Se necessario desmapear o endereço base do processo, no caso não precisa, ele só aloca um espaço na memoria no endereço imagebase do processo alvo no svchost.exe
+7. faz alguns calculos de relocação de endereço do arquivo PE alvo, e escreve o código começando do endereço IamgeBase até o fim do arquivo.
+8. Usa SetThreadContext para setar os endereços.
+9. Resumi a thread.  
 
 # Exemplo de compilação:
 # nasm -fWin64 T007.asm
