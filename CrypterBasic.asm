@@ -126,7 +126,7 @@ section .data
     ptr17f0                                          dd 0x01
     
 section codered
-	;CodeRed times 80000000                             db 0:
+	;CodeRed times 80000000                      db 0:
 	CodeRed:
 	buffer times 800000 dq 0
 
