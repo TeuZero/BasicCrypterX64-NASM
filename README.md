@@ -15,7 +15,7 @@ foi testado com o programa write.exe encontrado no diretório: "C:\Windows\write
 2. Vai criptografando e escrevendo o arquivo PE alvo para seção .codered.
 3. Cria o processo svchost.exe da pasta c:\WINDOWS\system32, suspendido.   
 4. Descriptografa o arquivo PE alvo na memoria.
-5. Se necessario desmapear o endereço base do processo, no caso não precisa, ele só aloca um espaço na memoria no endereço 0x400000 do processo svchost.exe
+5. Se necessario desmapear o endereço base do processo, no caso não precisa, ele só aloca um espaço na memoria no endereço imagebase do processo alvo no svchost.exe
 6. faz alguns calculos de relocação de endereço do arquivo PE alvo, e escreve o código começando do endereço  no 0x400000 até o fim do arquivo.
 7. Usa o GetThreadContext e SetThreadContext para setar os endereços.
 8. Resumi a thread. 
