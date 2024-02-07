@@ -5,6 +5,7 @@
 [Montar em assembly usando Nasm, usando a peb para achar dll's e funções da API do windows como se fosse um shellcode]
 
 Crypter Básico, esse crypter vai encriptar alguns programas feito em C/C++ e ASM pequenos.
+
 E vai decriptar e executa-lo em novo processo no caso "svchost.exe".
 
 (Em .NET , VBA,Pascal não funciona.)
