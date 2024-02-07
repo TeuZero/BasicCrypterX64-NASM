@@ -3,7 +3,6 @@
 ;* By:Teuzero *
 ;**************
 global WinMain
-
 section .bss 
     tamTotal                                        resq 8
     NameArgv0                                       resb 32
@@ -114,8 +113,7 @@ section .rdata
 	process dq "svchost.exe",0,0
 
 section .data
-
-	ctx istruc CONTEXT
+    ctx istruc CONTEXT
     iend
 
     ProcInfo istruc PROCESSINFO
