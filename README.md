@@ -4,9 +4,10 @@
 
 [Montar em assembly usando Nasm, usando a peb para achar dll's e funções da API do windows como se fosse um shellcode]
 
-Crypter Básico, esse crypter vai encriptar seu programa feito em C/C++ e ASM pequenos.
+Crypter Básico, esse crypter vai encriptar alguns programas feito em C/C++ e ASM pequenos.
+E vai decriptar e executa-lo em novo processo no caso "svchost.exe".
 
- (Em .NET , VBA,Pascal não funciona.)
+(Em .NET , VBA,Pascal não funciona.)
 
 Estou usando códigos prontos, pra não perder tempo digitando de novo, caso queria digitar de novo só usar os registradores fazer algumas mudanças adicionando ou removendo códigos, ou usando suas proprias tecnicas, isso para bypass o Anti-Vírus, mas no final vai cumprir a memas função!
 foi testado com o programa write.exe encontrado no diretório: "C:\Windows\write.exe" do WINDOWS, com msgbox, com programas de conexão reversa feito em assembly e em C/C++ .
