@@ -30,6 +30,8 @@ section .bss
     NumSection                                      resq 8
     handle                                          resq 8
     BufferFileNameTarget                            resb 0x100
+    address7ec                                      resd 1
+    Ptrt0                                           resq 1
 	
     struc CONTEXT
        .P1Home:                                     resq 1
@@ -123,10 +125,8 @@ section .data
     iend 
 	
     pt20                                             dq 20
-    Ptrt0                                            dq 0x00
     ptr17f0                                          dd 0x01
-    address7ec                                       dd 0
-	
+    
 section codered
 	CodeRed:
 	buffer times 800000 dq 0
