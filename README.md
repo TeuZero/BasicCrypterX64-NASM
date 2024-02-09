@@ -2,7 +2,7 @@
 # 0xC0FFE
     https://www.ired.team/offensive-security/code-injection-process-injection/process-hollowing-and-pe-image-relocations
 
-[Montar em assembly usando Nasm, usando a peb para achar dll's e funções da API do windows como se fosse um shellcode]
+[Montei em assembly usando Nasm, usando a peb para achar dll's e funções da API do windows como se fosse um shellcode]
 
 Crypter Básico, esse crypter vai encriptar alguns programas feito em C/C++ e ASM pequenos.
 
