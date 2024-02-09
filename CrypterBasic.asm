@@ -148,10 +148,10 @@ WinMain:
     call PrintMsgConsole
     call PegaNomeDoaquivo
     
-	lea rax, [rsp+0x10]
+    lea rax, [rsp+0x10]
     mov [rel bufferFileNameTarget], rax
     
-	call ReadTarget
+    call ReadTarget
     call Locate_kernel32
 	
     call VirtualProect
@@ -207,11 +207,10 @@ WinMain:
     mov rdi, rax
     add rsp,0x30
     add rsp, 0x08
-	
-	
-	mov rcx, [rel TamArqProgram]
-	mov rdx, [rel addressCrypted]
-	mov rdi, [rel addressAllocArv0]
+
+    mov rcx, [rel TamArqProgram]
+    mov rdx, [rel addressCrypted]
+    mov rdi, [rel addressAllocArv0]
 
 	Copy:
 		mov rsi, [rdi]
