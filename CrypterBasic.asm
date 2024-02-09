@@ -689,7 +689,7 @@ section deccode
             mov [rsp+0x20],rdx
             mov rdx,Rcx
             mov rcx, Rax
-	    sub rsp, 0x410
+	        sub rsp, 0x410
             call R12
             add rsp, 0x410
 	
@@ -827,7 +827,29 @@ section deccode
         mov rdx,Rax
         mov rax, [rel address750]
         add rax, Rdx
+		mov r9d, [rax+0x24]
+		cmp r9d, 0x60500020
+		jne RWC
+		mov r9d, 0x20
+		jmp Continue
+		RWC:
+			cmp r9d, 0xC0500040
+			jne RW
+			mov r9d, 0x80
+			jmp Continue
+		RW:
+			cmp r9d, 0xC0700080
+			jne R
+			mov r9d, 0x80
+			jmp Continue
+		R:
+			cmp r9d, 0x42100040
+			jne ROK
+		ROK:
+			mov r9d, 0x80
+		Continue:
         mov eax, [rax+0xc]
+		mov rcx, rax
         mov edx,eax
         mov rax, [rel ImageBase]
         add rax,Rdx
@@ -837,14 +859,14 @@ section deccode
         push rbx
         mov rbx,rsp
         mov [rsp+0x20],rbx
-        mov r9d, r8d
+        ;mov r9d, r8d
         mov r8, Rcx
         mov rdx,r10
         mov rcx, Rax
         call r12
         add rsp, 0x80
         sub rsp, 0x10
-	add rsp, 0x8
+	    add rsp, 0x8
         add dword [rel NumSection], 0x1
     Final:
         mov rax, [rel PE]
