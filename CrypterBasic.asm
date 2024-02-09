@@ -827,7 +827,7 @@ section deccode
         mov rdx,Rax
         mov rax, [rel address750]
         add rax, Rdx
-		mov r9d, [rax+0x24]
+	mov r9d, [rax+0x24]
 		cmp r9d, 0x60500020
 		jne RWC
 		mov r9d, 0x20
@@ -849,7 +849,7 @@ section deccode
 			mov r9d, 0x80
 		Continue:
         mov eax, [rax+0xc]
-		mov rcx, rax
+	mov rcx, rax
         mov edx,eax
         mov rax, [rel ImageBase]
         add rax,Rdx
@@ -866,7 +866,7 @@ section deccode
         call r12
         add rsp, 0x80
         sub rsp, 0x10
-	    add rsp, 0x8
+	add rsp, 0x8
         add dword [rel NumSection], 0x1
     Final:
         mov rax, [rel PE]
