@@ -3,6 +3,7 @@
 ;* By:Teuzero *
 ;**************
 global WinMain
+default rel
 section .bss 
     tamTotal                                        resq 8
     NameArgv0                                       resb 32
